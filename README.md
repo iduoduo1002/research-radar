@@ -1,6 +1,6 @@
 # Research Radar
 
-**0.4.2 桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
+**0.4.3 桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
 
 [English](README.en.md) · [更新记录](CHANGELOG.md) · [发布计划](docs/PUBLISHING.md) · [权利与署名](RIGHTS.md)
 
@@ -14,6 +14,7 @@
 |---|---|
 | [安装与使用说明](docs/USER-GUIDE.md) | 安装升级、首次配置、本地与在线翻译设置、主题/期刊/关键词、排障 |
 | [安全配置说明](docs/SECURITY.md) | 数据去向、Agent 权限、个人信息与资源控制、备份恢复 |
+| [Zotero联动与Agent配置](docs/ZOTERO.md) | 一键Prompt、本机连接、颜色图例和全文核验 |
 | [Agent 配置指南](AGENT.md) | 可复制提示词、JSON格式、手动导入、自动 API、验收 |
 | [验收记录](docs/STATUS.md) | 本版实际验证、缺口、历史记录 |
 | [示例主题方案](example-profile.json) | 可以交给 Agent 修改后导入的完整 JSON |

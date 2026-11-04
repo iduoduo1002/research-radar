@@ -1,12 +1,12 @@
 # 安装与使用说明
 
-适用版本：Research Radar 0.4.2（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
+适用版本：Research Radar 0.4.3（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
 
 要求：Obsidian 1.13.7或更高桌面版；已实测macOS，Windows/Linux尚未实机验收。当前仓库与测试Release为私有，须有访问权限及维护者单独授权才可下载测试；尚未公开开源或上架市场。
 
 ## 1. 安装、升级与回退
 
-1. 下载并解压 `research-radar-0.4.2.zip`。里面的文件夹名称为 `research-radar`。
+1. 下载并解压 `research-radar-0.4.3.zip`。里面的文件夹名称为 `research-radar`。
 2. 在 Obsidian 打开目标仓库，通过「设置 → 第三方插件」进入插件目录，或在文件管理器打开该库的 `.obsidian/plugins/`（隐藏目录）。
 3. 把整个 `research-radar` 文件夹放入 plugins，确保路径恰好为 `.obsidian/plugins/research-radar/manifest.json`，不要多嵌套一层文件夹。
 4. 重启 Obsidian，或刷新第三方插件列表，然后启用 **Research Radar**。仅在信任来源和代码后启用第三方插件。
@@ -94,6 +94,8 @@
 导入会替换主题方案（不是自动合并），保留本机翻译/Zotero设置。预览后发生其他配置修改，应用会被拒绝，需重新核对。详见 [Agent 配置指南](../AGENT.md)。
 
 ## 6. Zotero 标记与论文交接
+
+新增专门的[Zotero联动与Agent配置指南](ZOTERO.md)。设置或命令面板可打开“Zotero联动配置Prompt”，复制后交给Agent完成限定范围的配置；不需要把私有配置或密钥发给Agent。列表图例显示原色/红/绿/?，关闭集成时不据原色判断收录。
 
 Zotero 可选且默认关闭。需自行启用 Zotero 的本机 API 服务，端口默认 23119；仅支持本机个人库。不同 Zotero 版本的 API 设置位置可能不同，先确认本机服务可用，不要求关闭浏览器安全策略。
 

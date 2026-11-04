@@ -1,6 +1,6 @@
 # Research Radar
 
-**0.4.2 · Private desktop preview for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
+**0.4.3 · Private desktop preview for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
 
 The repository and prerelease are private. An open-source license has not been selected. See [LICENSE](LICENSE) and [Rights and attribution](RIGHTS.md); access does not grant redistribution permission.
 
@@ -39,3 +39,5 @@ Discovery uses configured PubMed, Crossref, Europe PMC or allowlisted RSS domain
 [Chinese guide](docs/USER-GUIDE.md) · [Security](docs/SECURITY.md) · [Agent guide](AGENT.md) · [Acceptance record](docs/STATUS.md) · [Changelog](CHANGELOG.md) · [Publication plan](docs/PUBLISHING.md).
 
 Report a minimal reproduction using the repository issue template. Remove credentials, private project context, PDFs and runtime data first. Development: Node.js 20+, `npm ci`, `npm test`, `npm run build`, `npm run package`. Tests do not constitute an independent security audit or scientific validation. This preview is not listed in the Obsidian community directory.
+
+Zotero setup is also available as a copyable, vault-scoped Agent Prompt from settings or the command palette. See [the Zotero guide](docs/ZOTERO.md). Red = matched with a readable local article PDF; green = matched without a verified local PDF; amber/? = unverified. Original color means unmatched only after a successful enabled check.

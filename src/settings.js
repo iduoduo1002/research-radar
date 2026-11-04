@@ -111,6 +111,7 @@ class RadarSettingsTab extends PluginSettingTab{
  e.createEl('h3',{text:'本机 Zotero 与收件箱'});
  new Setting(e).setName('Zotero 本机收录标记').setDesc('只读个人库；红色为检测到本地 PDF，绿色为已收录但未发现本地 PDF。断线为待核，打开 Zotero 后可在列表点重试。需 Zotero 本机 API。').addToggle(t=>t.setValue(d.zotero.enabled).onChange(v=>d.zotero.enabled=v));
  new Setting(e).setName('Zotero 端口').addText(t=>t.setValue(String(d.zotero.port)).onChange(v=>d.zotero.port=Number(v)));
+ new Setting(e).setName('Agent配置Zotero联动').setDesc('生成限定本库和本机端口的Prompt；只读核对，不下载或写库。使用已保存的端口，若修改请先保存。').addButton(b=>b.setButtonText('Zotero联动配置Prompt').onClick(()=>this.plugin.openZoteroSetup())).addButton(b=>b.setButtonText('手动配置与颜色说明').onClick(()=>this.plugin.openHelp('zotero')));
  new Setting(e).setName('论文任务收件箱').addText(t=>t.setValue(d.inboxFolder).onChange(v=>d.inboxFolder=v));
  e.createEl('h3',{text:'Agent 论文交接'});
  e.createEl('p',{text:'复用你已配置的Agent，无需重设模型或工具。默认要求和背景保存一次，交接时自动生成完整Prompt。这里不自动发送或启动进程。'});

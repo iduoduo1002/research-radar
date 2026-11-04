@@ -213,3 +213,13 @@
 .rr-handoff-settings { margin-top:4px; font-size:var(--font-small); }
 .rr-handoff-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; margin:16px 0; }
 .rr-handoff-actions button { max-width:100%; white-space:normal; height:auto; min-height:var(--input-height); }
+
+/* Compact legend: text labels remain meaningful without color perception. */
+.research-radar .rr-zotero-legend { display:flex; flex-wrap:wrap; gap:3px 12px; font-size:var(--font-smallest); line-height:1.4; color:var(--text-muted); }
+.research-radar .rr-zotero-legend[hidden] { display:none; }
+.rr-zotero-legend .rr-legend-pdf { color:#ff9c9f; }
+.rr-zotero-legend .rr-legend-no-pdf { color:#8fdfaf; }
+.rr-zotero-legend .rr-legend-unknown { color:#e6c889; }
+.theme-light .rr-zotero-legend .rr-legend-pdf { color:#a52b3c; }
+.theme-light .rr-zotero-legend .rr-legend-no-pdf { color:#176c43; }
+.theme-light .rr-zotero-legend .rr-legend-unknown { color:#8a651d; }

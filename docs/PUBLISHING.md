@@ -1,16 +1,16 @@
 # 发布与开源计划
 
-当前目标：`iduoduo1002/research-radar`私有仓库，0.4.2桌面测试版。**本阶段不改成公开，不提交插件市场。** 未来公开与开源许可证由拥有者另行批准，不能把“先私有，再开源”的路线设想当成已经完成的开源授权。
+当前目标：`iduoduo1002/research-radar`私有仓库，0.4.3桌面测试版。**本阶段不改成公开，不提交插件市场。** 未来公开与开源许可证由拥有者另行批准，不能把“先私有，再开源”的路线设想当成已经完成的开源授权。
 
 ## 1. 私有阶段
 
 源码仅包含src、tests、必要构建/打包脚本、依赖锁定和项目文档；backups、test-vault、evidence、node_modules、个人data.json和.env不进入Git。图片仅使用隔离测试库的通用示例；原始证据保留本地。公开仓库或私有仓库均不得上传凭据。
 
-Release标签使用与manifest.version完全一致的`0.4.2`，不用v前缀。附`main.js`、`manifest.json`、`styles.css`、安装ZIP与SHA256；README与完整文档位于源码和ZIP。Release标为pre-release，只有有私有仓库访问权限的用户可下载，不会因此对所有人开放。
+Release标签使用与manifest.version完全一致的`0.4.3`，不用v前缀。附`main.js`、`manifest.json`、`styles.css`、安装ZIP与SHA256；README与完整文档位于源码和ZIP。Release标为pre-release，只有有私有仓库访问权限的用户可下载，不会因此对所有人开放。
 
 LICENSE暂为权利保留声明，package.json为UNLICENSED；第三方MIT等许可保留。版权范围与开源选项见[RIGHTS](../RIGHTS.md)。不自动邀请协作者，不自动接受外部代码授权。
 
-自动检查配置暂存`.github/ci-template.yml`。当前GitHub登录授权缺少workflow权限，因此没有激活Actions，也没有远端CI验收。维护者日后用具备相应权限的方式，将模板放入`.github/workflows/`后再验证；本地可运行同样的npm命令。
+已按拥有者授权补齐workflow权限，自动检查位于`.github/workflows/ci.yml`，在push与pull_request时执行依赖安装、自动测试和安装包检查；Actions仅申请contents:read。工作流使用固定提交的官方checkout与setup-node，远端具体运行状态以对应提交的Actions记录为准，不以文件存在代替执行通过。本地可运行相同的npm命令。
 
 ## 2. 转公开之前
 

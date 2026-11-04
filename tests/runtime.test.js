@@ -161,3 +161,37 @@ test('handoff settings fields persist and survive reload without inference',asyn
  const template=p.tab.containerEl.querySelector('textarea[aria-label="Agent执行Prompt模板"]');template.value='My workflow {{papers}} {{context}}';template.dispatchEvent(new window.Event('input'));
  await [...p.tab.containerEl.querySelectorAll('button')].find(b=>b.textContent==='保存设置').onclick();assert.equal(p.settings.handoff.projectContext,'PRIVATE_CONTEXT');const q=await plugin();assert.equal(q.settings.handoff.promptTemplate,'My workflow {{papers}} {{context}}');assert.equal(requests.length,0);assert.ok(!JSON.stringify(q.exportProfile()).includes('PRIVATE_CONTEXT'));q.onunload();p.onunload();
 });
+
+test('Zotero scoped configuration preserves unrelated settings and rejects broad/stale/busy writes',async()=>{
+ stored=null;const p=await plugin(),original=p.getConfiguration();
+ assert.deepEqual(p.getZoteroConfiguration(),{revision:original.revision,configuration:{enabled:false,port:23119}});
+ for(const bad of [{enabled:'true',port:23119},{enabled:true,port:80},{enabled:true,port:23119,endpoint:'https://elsewhere.test'},{enabled:true,port:23119,translation:{enabled:true}}])assert.throws(()=>p.previewZoteroConfiguration(bad),/只接受/);
+ const preview=p.previewZoteroConfiguration({enabled:true,port:23120});assert.equal(p.settings.zotero.enabled,false);
+ await p.applyZoteroConfiguration(preview.configuration,{expectedRevision:preview.revision});
+ const after=p.getConfiguration();assert.deepEqual({...after.settings,zotero:original.settings.zotero},original.settings);assert.equal(stored.settings.zotero.port,23120);
+ assert.deepEqual(Object.keys(p.getZoteroConfiguration()).sort(),['configuration','revision']);assert.ok(!JSON.stringify(p.getZoteroConfiguration()).includes('translation'));
+ await assert.rejects(p.applyZoteroConfiguration(preview.configuration,{expectedRevision:preview.revision}),/变化/);
+ fail=true;await assert.rejects(p.applyZoteroConfiguration({enabled:false,port:23119},{expectedRevision:p.revision}),/disk/);fail=false;assert.deepEqual(p.getConfiguration(),after);
+ p.translationBatch={state:'running',items:[]};await assert.rejects(p.applyZoteroConfiguration({enabled:false,port:23119},{expectedRevision:p.revision}),/暂停翻译/);p.translationBatch=null;
+ const q=await plugin();assert.deepEqual(q.settings.zotero,{enabled:true,port:23120});q.onunload();p.onunload();
+});
+
+test('Zotero setup Prompt copies exact vault/port without enabling or leaking other settings',async()=>{
+ stored=null;requests=[];const p=await plugin();p.app.vault.getName=()=> 'Quoted "vault" / $literal';
+ p.settings.handoff.projectContext='PRIVATE_RESEARCH_CONTEXT';p.settings.translation.apiSecretRef='PRIVATE_KEY_REFERENCE';
+ const before=p.getConfiguration(),modal=p.openZoteroSetup();
+ const area=modal.contentEl.querySelector('textarea');assert.equal(area.readOnly,true);assert.match(area.value,/getZoteroConfiguration/);assert.match(area.value,/checkZoteroConnection/);assert.ok(area.value.includes(JSON.stringify(p.app.vault.getName())));assert.match(area.value,/expectedRevision:preview.revision/);
+ for(const x of ['PRIVATE_RESEARCH_CONTEXT','PRIVATE_KEY_REFERENCE'])assert.ok(!area.value.includes(x));
+ let copied='';Object.defineProperty(navigator,'clipboard',{value:{writeText:async text=>copied=text},configurable:true});await [...modal.contentEl.querySelectorAll('button')].find(x=>x.textContent==='复制Zotero配置Prompt').onclick();assert.equal(copied,area.value);assert.match(modal.contentEl.textContent,/尚未配置、尚未执行/);assert.deepEqual(p.getConfiguration(),before);assert.equal(requests.length,0);
+ Object.defineProperty(navigator,'clipboard',{value:{writeText:async()=>{throw Error('denied');}},configurable:true});await [...modal.contentEl.querySelectorAll('button')].find(x=>x.textContent==='复制Zotero配置Prompt').onclick();assert.match(modal.contentEl.textContent,/手动选择/);modal.close();p.tab.display();assert.match(p.tab.containerEl.textContent,/Zotero联动配置Prompt/);p.onunload();
+});
+
+test('Zotero verification reports counts only and preserves red/green/unknown with no inference',async()=>{
+ stored=null;requests=[];const p=await plugin();let reads=0;p.loadZoteroIndex=async()=>{reads++;return {count:4,privateRecord:'must not be returned'};};await assert.rejects(p.checkZoteroConnection(),/授权并保存/);assert.equal(reads,0);
+ p.settings.zotero.enabled=true;assert.deepEqual(await p.checkZoteroConnection(),{connected:true,library:'personal',libraryItemCount:4,panels:[]});
+ const el=document.createElement('div');document.body.append(el);el.innerHTML='<article class="rr-item is-in-zotero is-zotero-pdf"></article><article class="rr-item is-in-zotero is-zotero-no-pdf"></article><article class="rr-item is-in-zotero is-zotero-unknown"></article><article class="rr-item"></article>';
+ const b={alive:true,containerEl:el,list:el,checkZotero:async()=>{}};p.blocks.add(b);
+ try{const result=await p.checkZoteroConnection();assert.deepEqual(result.panels,[{displayed:4,pdf:1,noPdf:1,unknown:1,unmatched:1}]);assert.ok(!JSON.stringify(result).includes('privateRecord'));assert.equal(requests.length,0);assert.equal(p.diagnostics.translationRequests,0);
+ p.loadZoteroIndex=async()=>{p.revision++;return {count:4};};await assert.rejects(p.checkZoteroConnection(),/变化/);
+ }finally{p.blocks.delete(b);el.remove();p.onunload();}
+});

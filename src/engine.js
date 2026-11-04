@@ -296,6 +296,12 @@ class RadarBlock extends MarkdownRenderChild {
     this.zoteroButton.title = "仅重新核对 Zotero，不刷新论文、不启动模型。红：有本地论文 PDF；绿：已收录无本地 PDF；原色：未收录；琥珀：待核。";
     this.registerDomEvent(this.zoteroButton, "click", () => this.checkZotero(true));
     this.coverageEl = node(this.navigationEl, "details", "rr-coverage");
+    this.zoteroLegend = node(this.navigationEl, "div", "rr-zotero-legend");
+    this.zoteroLegend.setAttribute("aria-label", "Zotero标题颜色图例");
+    for (const [cls,text] of [["default","原色 未匹配"],["pdf","红 有PDF"],["no-pdf","绿 无本地PDF"],["unknown","? 待核"]]) {
+      node(this.zoteroLegend,"span",`rr-legend-${cls}`,text);
+    }
+    this.zoteroLegend.title = "仅在启用并成功核对后解释颜色；红色确认本地论文PDF可读，不代表全文完整或已阅读全文。";
     this.list = node(this.containerEl, "div", "rr-list");
     node(this.containerEl, "div", "rr-footnote", "多选 → 翻译所选论文 → 稍后读中文 · 原文/中文随时切换 · 批量译文长期保留 · 选择在关闭页面后清空");
     this.registerDomEvent(this.list, "change", event => {
@@ -535,6 +541,7 @@ class RadarBlock extends MarkdownRenderChild {
   }
   updateSelection() {
     if (this.zoteroButton) this.zoteroButton.hidden = !this.plugin.settings.zotero.enabled;
+    if (this.zoteroLegend) this.zoteroLegend.hidden = !this.plugin.settings.zotero.enabled;
     this.selectionCount.textContent = this.activeKeyword
       ? `筛选 ${this.items.length}/${this.unfilteredItems.length} 篇 · 已选总计 ${this.selection.size} 篇${this.zoteroSummary || ""}`
       : `当前 ${this.items.length} 篇 · 已选 ${this.selection.size} 篇${this.zoteroSummary || ""}`;

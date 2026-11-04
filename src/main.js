@@ -5,6 +5,7 @@ const {DEFAULT_SETTINGS,normalizeSettings,normalizeRadar,profile,mergeProfile,de
 const {RadarSettingsTab,ProfileModal}=require('./settings');
 const {saveTask}=require('./handoff');
 const {HelpModal}=require('./help');
+const {normalizeZotero,ZoteroSetupModal}=require('./zotero-setup');
 const VIEW='research-radar-view';
 class RadarView extends ItemView{
  constructor(leaf,plugin){super(leaf);this.plugin=plugin;}
@@ -24,11 +25,28 @@ class ResearchRadar extends RadarEngine{
   this.addCommand({id:'import-profile',name:'导入 Agent / 共享主题方案',callback:()=>new ProfileModal(this,'import').open()});
   this.addCommand({id:'export-profile',name:'导出主题方案',callback:()=>new ProfileModal(this,'export').open()});
   this.addSettingTab(new RadarSettingsTab(this.app,this));
+  this.addCommand({id:'zotero-setup',name:'Zotero联动配置Prompt',callback:()=>this.openZoteroSetup()});
   this.addCommand({id:'help',name:'安装与使用说明',callback:()=>this.openHelp()});
   this.registerMarkdownCodeBlockProcessor('research-radar-view',(_source,el,ctx)=>{ctx.addChild(new RadarBlock(el,this,'@settings'));});
  }
  openHelp(key='guide'){const modal=new HelpModal(this,key);modal.open();return modal;}
  async openRadar(){let leaf=this.app.workspace.getLeavesOfType(VIEW)[0];if(!leaf){leaf=this.app.workspace.getLeaf('tab');await leaf.setViewState({type:VIEW,active:true});}await this.app.workspace.revealLeaf(leaf);}
+ openZoteroSetup(){const modal=new ZoteroSetupModal(this);modal.open();return modal;}
+ getZoteroConfiguration(){return {revision:this.revision,configuration:clone(this.settings.zotero)};}
+ previewZoteroConfiguration(input){const configuration=normalizeZotero(input);return {revision:this.revision,configuration,previous:clone(this.settings.zotero)};}
+ applyZoteroConfiguration(input,{expectedRevision}={}){return this.applySettings({...clone(this.settings),zotero:normalizeZotero(input)},expectedRevision);}
+ async checkZoteroConnection(){
+  if(!this.alive)throw Error('插件已停止。');
+  if(!this.settings.zotero.enabled)throw Error('请先授权并保存启用 Zotero 联动。');
+  const revision=this.revision,index=await this.loadZoteroIndex();
+  const ensure=()=>{if(!this.alive||revision!==this.revision)throw Error('配置已变化或插件已停止，请重新核对。');};ensure();
+  const blocks=[...this.blocks].filter(b=>b.alive&&b.containerEl.isConnected);
+  await Promise.all(blocks.map(b=>b.checkZotero()));ensure();
+  return {connected:true,library:'personal',libraryItemCount:index.count,panels:blocks.map(b=>{
+   const rows=[...b.list.querySelectorAll('.rr-item')];const count=c=>rows.filter(r=>r.classList.contains(c)).length;
+   return {displayed:rows.length,pdf:count('is-zotero-pdf'),noPdf:count('is-zotero-no-pdf'),unknown:count('is-zotero-unknown'),unmatched:rows.filter(r=>!r.classList.contains('is-in-zotero')&&!r.classList.contains('is-zotero-unknown')).length};
+  })};
+ }
  getConfiguration(){return {revision:this.revision,settings:clone(this.settings)};}
  exportProfile(){return profile(this.settings);}
  previewProfile(input){const next=mergeProfile(input,this.settings);return {revision:this.revision,changes:describeChange(this.settings,next),profile:profile(next)};}

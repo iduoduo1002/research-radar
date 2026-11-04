@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.3 — Zotero setup and Agent guidance
+
+- Added a copyable, vault-scoped Zotero setup Prompt in settings and the command palette.
+- Added revision-checked Zotero-only configuration and read-only verification APIs.
+- Added a compact red/green/unmatched/unverified legend and a full Zotero setup/troubleshooting guide.
+- Existing Zotero/PDF colors and recovery remain; no automatic download, library writes or translation.
+
+
 ## 0.4.2 — 2026-11-04 — Private desktop preview
 
 - Prepare a private GitHub repository and prerelease; no community-directory submission or public license grant.
