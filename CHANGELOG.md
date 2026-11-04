@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.7 — 2026-11-04 — Clickable Zotero status filters
+
+- Filter unmatched, readable local PDF, no local PDF and unknown from the compact color legend, with per-state counts and keyboard-accessible toggle buttons.
+- Combine with keyword filters; preserve selections and select only visible papers with select-all. Renumber visible papers and show filtered counts.
+- Keep pending/offline entries unknown and update automatically after read-only Zotero verification. Toggle filters without fetching papers, translation or extra Zotero requests.
+
+
 ## 0.4.6 — 2026-11-04 — Installation and regression fixes
 
 - Validate trimmed inbox paths, reject traversal/hidden directories and platform-reserved names.

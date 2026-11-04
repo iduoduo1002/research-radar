@@ -264,3 +264,32 @@ test('malformed feed cache does not erase valid translations and paused work on 
  stored={settings:c.clone(c.DEFAULT_SETTINGS),feeds:{'https://www.nature.com/nmeth.rss':{savedAt:1,items:[],issues:{broken:true}}},savedTranslations:{keep:saved},translations:{keep:saved},translationBatch:{state:'paused',items:[{state:'pending',item:{title:'Keep',abstract:'original'}}]}};
  const p=await plugin();assert.deepEqual(p.savedTranslations.keep,saved);assert.equal(p.translationBatch.state,'paused');await p.persist();assert.deepEqual(stored.savedTranslations.keep,saved);assert.equal(p.diagnostics.translationRequests,0);p.onunload();
 });
+
+test('Zotero legend filters all four states without requests; visible selection, numbering and toggle restore',async()=>{
+ stored=null;const p=await plugin(),b=new RadarBlock(document.createElement('div'),p,'@settings');document.body.append(b.containerEl);b.load();await new Promise(r=>setTimeout(r,20));
+ const papers=['pdf','entry','new','unknown'].map(x=>({title:'Retention '+x,doi:'10.1000/'+x,url:'https://doi.org/10.1000/'+x}));
+ const index=require('../src/core').zoteroPaperIndex([{key:'PDF12345',DOI:papers[0].doi},{key:'ENTRY123',DOI:papers[1].doi},{key:'UNKN1234',DOI:papers[3].doi}]);index.count=3;
+ let reads=0,attachments=0,fetches=0;p.loadZoteroIndex=async()=>{reads++;return index;};p.getZoteroPdfStatus=async key=>{attachments++;return key==='PDF12345'?'pdf':key==='ENTRY123'?'no_pdf':'unknown';};b.fetchCurrent=async()=>{fetches++;};p.settings.zotero.enabled=true;
+ try{
+  b.renderItems(papers);await b.zoteroPending;const before=[reads,attachments,fetches,p.diagnostics.translationRequests];
+  for(const [status,n] of [['pdf',0],['no-pdf',1],['default',2],['unknown',3]]){
+   const button=b.zoteroLegend.querySelector(`[data-status="${status}"]`);button.click();assert.deepEqual(b.visibleItems(),[papers[n]]);assert.equal(button.getAttribute('aria-pressed'),'true');assert.match(button.textContent,/1$/);assert.match(b.selectionCount.textContent,/筛选 1\/4/);const row=[...b.list.children].find(r=>!r.hidden);assert.equal(row.querySelector('.rr-item-number').textContent,'1.');b.selectAllButton.click();assert.equal(b.selection.has(papers[n]),true);button.click();assert.equal(b.visibleItems().length,4);
+  }
+  assert.equal(b.selection.size,4);assert.deepEqual([reads,attachments,fetches,p.diagnostics.translationRequests],before);
+  b.toggleZoteroFilter('pdf');b.topic.keywordFilters=[{label:'No results',pattern:'absentZZZ'}];b.toggleKeyword('No results');assert.equal(b.visibleItems().length,0);assert.equal(b.selectAllButton.disabled,true);assert.equal(b.zoteroEmpty.hidden,false);assert.equal(b.selection.size,4);
+  b.toggleKeyword('No results');await b.zoteroPending;assert.deepEqual(b.visibleItems(),[papers[0]]);
+  p.settings.zotero.enabled=false;b.updateSelection();assert.equal(b.activeZoteroFilter,null);assert.equal(b.visibleItems().length,4);assert.equal(b.zoteroLegend.hidden,true);
+ }finally{b.unload();b.containerEl.remove();p.onunload();}
+});
+
+test('Zotero filter treats pending/offline as unknown and recovers without hiding the lookup set',async()=>{
+ stored=null;const p=await plugin(),b=new RadarBlock(document.createElement('div'),p,'@settings');document.body.append(b.containerEl);b.load();await new Promise(r=>setTimeout(r,20));
+ const item={title:'Paper',doi:'10.1000/filter',url:'https://doi.org/10.1000/filter'},core=require('../src/core');const index=core.zoteroPaperIndex([{key:'PDF12345',DOI:item.doi}]);index.count=1;
+ let resolve,offline=false;p.settings.zotero.enabled=true;p.loadZoteroIndex=()=>offline?Promise.reject(Error('offline')):new Promise(r=>{resolve=r;});p.getZoteroPdfStatus=async()=> 'pdf';
+ try{
+  b.renderItems([item]);b.toggleZoteroFilter('default');assert.equal(b.visibleItems().length,0);assert.equal(b.zoteroLegend.querySelector('[data-status="unknown"]').textContent,'? 待核 1');resolve(index);await b.zoteroPending;assert.equal(b.visibleItems().length,0);
+  b.toggleZoteroFilter('pdf');assert.equal(b.visibleItems().length,1);offline=true;await b.checkZotero(true);assert.equal(b.visibleItems().length,0);assert.equal(b.list.firstChild.dataset.zoteroStatus,'unknown');assert.ok(b.list.firstChild.classList.contains('is-zotero-unverified'));
+  b.toggleZoteroFilter('unknown');assert.equal(b.visibleItems().length,1);offline=false;const pending=b.checkZotero(true);resolve(index);await pending;assert.equal(b.visibleItems().length,0);b.toggleZoteroFilter('pdf');assert.equal(b.visibleItems().length,1);
+  assert.equal(p.diagnostics.translationRequests,0);
+ }finally{b.unload();b.containerEl.remove();p.onunload();}
+});

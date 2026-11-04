@@ -1,14 +1,14 @@
 # 发布与开源流程
 
-拥有者已授权将 `iduoduo1002/research-radar` 改为公开并开源。**0.4.4 为首次 Apache-2.0 开源桌面测试版**；仍使用 pre-release 标记，尚未提交 Obsidian 社区市场。公开与远端发布是否完成，以 GitHub 实际回读为准。
+`iduoduo1002/research-radar` 已公开并按 Apache-2.0 开源；Research Radar 已在 [Obsidian 社区市场](https://community.obsidian.md/plugins/research-radar)公开。0.4.4 为首次开源桌面测试版，0.4.6 起发布非 pre-release 的桌面候选版本。最新版本与目录同步状态以 GitHub Release 和社区页面的实际显示为准。
 
 ## 1. 发布内容与许可
 
 源码包含 src、tests、构建/打包脚本、依赖锁定和项目文档。backups、test-vault、evidence、node_modules、个人 data.json 和 .env 不进入 Git；四个本地未跟踪的实机脚本不随本次提交。图片使用隔离测试库通用示例，原始私人证据留本地。
 
-根目录 [LICENSE](../LICENSE) 为 Apache-2.0 正式原文；[NOTICE](../NOTICE) 保留项目署名，[RIGHTS](../RIGHTS.md) 解释授权范围与边界，第三方 MIT 许可单独完整保留。版本与原始附件不可静默替换：0.4.2、0.4.3 保留历史授权，新用户下载最新的 0.4.6 开源测试版。
+根目录 [LICENSE](../LICENSE) 为 Apache-2.0 正式原文；[NOTICE](../NOTICE) 保留项目署名，[RIGHTS](../RIGHTS.md) 解释授权范围与边界，第三方 MIT 许可单独完整保留。版本与原始附件不可静默替换：0.4.2、0.4.3 保留历史授权，新用户下载最新的 0.4.7 开源测试版。
 
-标签必须与 manifest.version 一致，当前 0.4.6 不带 v 前缀。Release 附 main.js、manifest.json、styles.css、安装 ZIP 和 SHA256。ZIP 包含完整文档与许可；程序头部也携带项目与第三方许可，以支持市场三文件安装形式。
+标签必须与 manifest.version 一致，当前 0.4.7 不带 v 前缀。Release 附 main.js、manifest.json、styles.css、安装 ZIP 和 SHA256。ZIP 包含完整文档与许可；程序头部也携带项目与第三方许可，以支持市场三文件安装形式。
 
 ## 2. 发布检查
 
@@ -22,7 +22,7 @@ Actions 在 push/pull_request 执行 npm ci、npm test 和 npm run package，仅
 
 ## 3. 社区插件目录提交
 
-当前官方入口是 [Obsidian Community](https://community.obsidian.md/account/plugins)，不再按旧文档向 community-plugins.json 提 PR。先发布0.4.6及匹配版本的三文件附件，再登录Obsidian账号、关联GitHub公开个人资料，选择 New plugin，填写 https://github.com/iduoduo1002/research-radar。提交后根据自动检查修改，再发布对应版本。
+当前官方入口是 [Obsidian Community](https://community.obsidian.md/account/plugins)，不再按旧文档向 community-plugins.json 提 PR。先发布0.4.7及匹配版本的三文件附件，再登录Obsidian账号、关联GitHub公开个人资料，选择 New plugin，填写 https://github.com/iduoduo1002/research-radar。提交后根据自动检查修改，再发布对应版本。
 
 提交表单要求同意开发者政策并确认继续支持插件，或无法维护时移除/转移。提交与正式可安装是不同状态；本说明不代表已经提交或审核通过，具体状态以社区管理页为准。
 

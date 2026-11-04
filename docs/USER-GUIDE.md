@@ -1,12 +1,12 @@
 # 安装与使用说明
 
-适用版本：Research Radar 0.4.6（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
+适用版本：Research Radar 0.4.7（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
 
 要求：Obsidian 1.13.7或更高桌面版；已实测macOS，Windows/Linux尚未实机验收。仓库与桌面测试版按 Apache-2.0 公开，直接从 GitHub Releases 下载；尚未上架 Obsidian 社区市场。
 
 ## 1. 安装、升级与回退
 
-1. 下载并解压 `research-radar-0.4.6.zip`。里面的文件夹名称为 `research-radar`。
+1. 下载并解压 `research-radar-0.4.7.zip`。里面的文件夹名称为 `research-radar`。
 2. 在 Obsidian 打开目标仓库，通过「设置 → 第三方插件」进入插件目录，或在文件管理器打开该库的 `.obsidian/plugins/`（隐藏目录）。
 3. 把整个 `research-radar` 文件夹放入 plugins，确保路径恰好为 `.obsidian/plugins/research-radar/manifest.json`，不要多嵌套一层文件夹。
 4. 重启 Obsidian，或刷新第三方插件列表，然后启用 **Research Radar**。仅在信任来源和代码后启用第三方插件。
@@ -23,7 +23,7 @@
 需要 Python 3.9+ 和网络连接。先退出 Obsidian，把下面路径换成自己的 Vault；不需要管理员权限或 GitHub Token。macOS/Linux 在终端执行：
 
 ```sh
-rr_installer="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.6/scripts/install.py -o "$rr_installer" && python3 "$rr_installer" --vault "/你的/Vault路径" --version 0.4.6 --obsidian-closed
+rr_installer="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.7/scripts/install.py -o "$rr_installer" && python3 "$rr_installer" --vault "/你的/Vault路径" --version 0.4.7 --obsidian-closed
 ```
 
 想先看安装计划，把 `--obsidian-closed` 换成 `--dry-run`；会下载并核对发布包，Vault 不写入文件。可先打开下载的脚本阅读再执行。执行后打开 Obsidian，在社区插件中启用 Research Radar。
@@ -32,8 +32,8 @@ Windows PowerShell（已安装 Python，支持 `py -3`）：
 
 ```powershell
 $rrInstaller = New-TemporaryFile
-Invoke-WebRequest 'https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.6/scripts/install.py' -OutFile $rrInstaller.FullName -ErrorAction Stop
-py -3 $rrInstaller.FullName --vault 'C:\你的Vault路径' --version 0.4.6 --obsidian-closed
+Invoke-WebRequest 'https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.7/scripts/install.py' -OutFile $rrInstaller.FullName -ErrorAction Stop
+py -3 $rrInstaller.FullName --vault 'C:\你的Vault路径' --version 0.4.7 --obsidian-closed
 ```
 
 同一命令支持升级，保留自己的 `data.json`、译文及其他个人文件。仅安装发布包白名单中的20个文件，不自动启用插件、不更改其他插件、不安装模型。支持自定义配置目录，例如 `--config-dir .obsidian-work`。不指定版本时读取最新非预发布 Release；API限流时用固定 `--version` 可跳过元数据请求。
@@ -279,4 +279,6 @@ DeepSeek：选择对应服务，密钥通过选择器建立独立引用；模型
 
 如果内容过长，先复制草稿，再打开反馈列表新建 Issue 粘贴。浏览器或剪贴板失败时，展开预览手动复制。不要填写密钥、完整 data.json、私人文库、研究背景或全文；链接可能保留在浏览器历史。需要私密报告的安全问题按仓库 SECURITY.md 联系。
 
-0.4.6 支持雷达主窗口、独立弹出窗口及窗口迁移后的本窗口预览、滚动定位与 Esc 关闭；关闭面板时移除预览及事件监听，不触发翻译。
+0.4.7 支持雷达主窗口、独立弹出窗口及窗口迁移后的本窗口预览、滚动定位与 Esc 关闭；关闭面板时移除预览及事件监听，不触发翻译。
+
+Zotero 图例现可点击筛选：点状态标签只看对应论文，再点一次取消；与关键词叠加，保留已选项，全选只作用于可见论文。核对中/断线归待核，连接恢复后自动更新，详见 [Zotero 指南](ZOTERO.md)。

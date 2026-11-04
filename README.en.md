@@ -1,6 +1,6 @@
 # Research Radar
 
-**0.4.6 · Open-source desktop beta for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
+**0.4.7 · Open-source desktop beta for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
 
 Available in the [Obsidian community directory](https://community.obsidian.md/plugins/research-radar). Click **Add to Obsidian**, or search for **Research Radar** in Settings → Community plugins → Browse.
 
@@ -55,7 +55,9 @@ Only plugin/Obsidian versions and OS family are automatically included, with no 
 Close Obsidian first. With Python 3.9+ and curl, replace the vault path:
 
 ```sh
-rr_installer="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.6/scripts/install.py -o "$rr_installer" && python3 "$rr_installer" --vault "/path/to/vault" --version 0.4.6 --obsidian-closed
+rr_installer="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.7/scripts/install.py -o "$rr_installer" && python3 "$rr_installer" --vault "/path/to/vault" --version 0.4.7 --obsidian-closed
 ```
 
 Use `--dry-run` instead of `--obsidian-closed` to preview without writing to the vault. The external, user-run installer checks SHA256/ZIP/manifest, backs up the existing directory, preserves data.json, and attempts rollback on replacement failure. It never enables plugins automatically; enable Research Radar in Community plugins after installation. The plugin does not install or update itself. See the user guide for Windows, custom configuration folders and backup recovery.
+
+Zotero legend filters (0.4.7): click unmatched, PDF, no-local-PDF or unknown to filter the current list; click again to clear. Filters combine with keywords and retain previous selections. Select-all selects only visible papers.

@@ -234,3 +234,16 @@
 .rr-feedback-label textarea { resize: vertical; min-height: 140px; }
 .rr-feedback-preview { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 240px; overflow-y: auto; font-size: var(--font-ui-small); }
 .rr-feedback-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+/* Zotero legend doubles as an accessible, compact single-state filter. */
+.research-radar .rr-zotero-legend .rr-legend-filter { background:transparent; box-shadow:none; border:1px solid transparent; border-radius:4px; color:inherit; font:inherit; line-height:1.4; height:auto; min-height:0; padding:1px 4px; margin:0; cursor:pointer; white-space:nowrap; }
+.research-radar .rr-zotero-legend .rr-legend-pdf { color:#ff9c9f; }
+.research-radar .rr-zotero-legend .rr-legend-no-pdf { color:#8fdfaf; }
+.research-radar .rr-zotero-legend .rr-legend-unknown { color:#e6c889; }
+.theme-light .research-radar .rr-zotero-legend .rr-legend-pdf { color:#a52b3c; }
+.theme-light .research-radar .rr-zotero-legend .rr-legend-no-pdf { color:#176c43; }
+.theme-light .research-radar .rr-zotero-legend .rr-legend-unknown { color:#8a651d; }
+.research-radar .rr-zotero-legend .rr-legend-filter:hover { background:var(--background-modifier-hover); }
+.research-radar .rr-zotero-legend .rr-legend-filter[aria-pressed="true"] { border-color:currentColor; background:var(--background-modifier-hover); }
+.research-radar .rr-zotero-legend .rr-legend-filter:focus-visible { outline:2px solid var(--interactive-accent); outline-offset:1px; }
+.research-radar .rr-item[hidden], .research-radar .rr-zotero-empty[hidden] { display:none !important; }

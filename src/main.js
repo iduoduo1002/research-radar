@@ -47,7 +47,7 @@ class ResearchRadar extends RadarEngine{
   const blocks=[...this.blocks].filter(b=>b.alive&&b.containerEl.isConnected);
   await Promise.all(blocks.map(b=>b.checkZotero()));ensure();
   return {connected:true,library:'personal',libraryItemCount:index.count,panels:blocks.map(b=>{
-   const rows=[...b.list.querySelectorAll('.rr-item')];const count=c=>rows.filter(r=>r.classList.contains(c)).length;
+   const rows=[...b.list.querySelectorAll('.rr-item')].filter(r=>!r.hidden);const count=c=>rows.filter(r=>r.classList.contains(c)).length;
    return {displayed:rows.length,pdf:count('is-zotero-pdf'),noPdf:count('is-zotero-no-pdf'),unknown:count('is-zotero-unknown'),unmatched:rows.filter(r=>!r.classList.contains('is-in-zotero')&&!r.classList.contains('is-zotero-unknown')).length};
   })};
  }

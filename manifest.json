@@ -1,7 +1,7 @@
 {
   "id": "research-radar",
   "name": "Research Radar",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "minAppVersion": "1.13.7",
   "description": "Personalized literature discovery, manual local and online AI translation, and optional Zotero integration.",
   "author": "iduoduo",

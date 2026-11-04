@@ -1,6 +1,6 @@
 # Research Radar
 
-**0.4.6 开源桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
+**0.4.7 开源桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
 
 [English](README.en.md) · [更新记录](CHANGELOG.md) · [发布计划](docs/PUBLISHING.md) · [权利与署名](RIGHTS.md)
 
@@ -36,7 +36,7 @@
 退出 Obsidian，将路径替换成自己的 Vault，然后执行（Python 3.9+）：
 
 ```sh
-rr_installer="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.6/scripts/install.py -o "$rr_installer" && python3 "$rr_installer" --vault "/你的/Vault路径" --version 0.4.6 --obsidian-closed
+rr_installer="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.7/scripts/install.py -o "$rr_installer" && python3 "$rr_installer" --vault "/你的/Vault路径" --version 0.4.7 --obsidian-closed
 ```
 
 将 `--obsidian-closed` 换成 `--dry-run` 可先预览，Vault 不发生写入。安装器校验发布包、备份旧目录并保留 data.json；首次安装后到社区插件中手动启用。Windows、升级回退和校验边界见[安装指南](docs/USER-GUIDE.md)。脚本在插件外手动运行，插件不自更新。
@@ -108,3 +108,5 @@ Node.js 20+：`npm ci` → `npm test` → `npm run build` → `npm run package`�
 也可以复制草稿，或通过[反馈列表](https://github.com/iduoduo1002/research-radar/issues)先看是否已有相同问题。长草稿或浏览器/剪贴板失败时，使用可展开预览手动复制，不自动重试或发送。
 
 不自动上传日志、文库、论文、设置、研究背景或 Zotero 信息。草稿只自动带插件版本、Obsidian 版本和系统类型；点击打开 GitHub 后，草稿文本会通过 URL 查询参数发送给 GitHub，可能留在浏览器历史中。不要填入密钥或私人材料。维护者按问题复现、优先级和验证结果处理，再通过版本更新记录反馈；不承诺所有建议一定实现或固定时限。
+
+Zotero 颜色图例支持点击筛选（0.4.7）：点原色、红色、绿色或待核标签，只看对应论文；再次点击恢复，可与关键词叠加，保留已有勾选。「全选当前列表」只选择可见论文。

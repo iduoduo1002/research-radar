@@ -229,6 +229,7 @@ class RadarBlock extends MarkdownRenderChild {
     this.items = [];
     this.unfilteredItems = [];
     this.activeKeyword = null;
+    this.activeZoteroFilter = null;
     this.selection = new PaperSelection();
     this.popupArticle = null;
     try { this.readingMode = localStorage.getItem(`rr-language:${path}`) || "original"; } catch (_) { this.readingMode = "original"; }
@@ -248,7 +249,7 @@ class RadarBlock extends MarkdownRenderChild {
     this.batchButton = node(batch, "button", "rr-batch-send", "批量交给智能体");
     for (const button of [this.selectAllButton, this.clearButton, this.batchButton]) button.type = "button";
     this.registerDomEvent(this.selectAllButton, "click", () => {
-      for (const item of this.items) if (safeLink(item.url)) this.selection.set(item, this.topic.label, this.source.name, true);
+      for (const item of this.visibleItems()) if (safeLink(item.url)) this.selection.set(item, this.topic.label, this.source.name, true);
       this.updateSelection();
     });
     this.registerDomEvent(this.clearButton, "click", () => { this.selection.clear(); this.updateSelection(); });
@@ -302,12 +303,20 @@ class RadarBlock extends MarkdownRenderChild {
     this.registerDomEvent(this.feedbackButton, "click", () => this.plugin.openFeedback());
     this.coverageEl = node(this.navigationEl, "details", "rr-coverage");
     this.zoteroLegend = node(this.navigationEl, "div", "rr-zotero-legend");
-    this.zoteroLegend.setAttribute("aria-label", "Zotero标题颜色图例");
+    this.zoteroLegend.setAttribute("aria-label", "按 Zotero 收录及 PDF 状态筛选");
     for (const [cls,text] of [["default","原色 未匹配"],["pdf","红 有PDF"],["no-pdf","绿 无本地PDF"],["unknown","? 待核"]]) {
-      node(this.zoteroLegend,"span",`rr-legend-${cls}`,text);
+      const button = node(this.zoteroLegend,"button",`rr-legend-filter rr-legend-${cls}`,text);
+      button.type = "button";
+      button.dataset.status = cls;
+      button.dataset.label = text;
+      button.setAttribute("aria-pressed", "false");
+      button.title = `${text}：筛选当前列表，再次点击取消；可与关键词叠加`;
+      this.registerDomEvent(button, "click", () => this.toggleZoteroFilter(cls));
     }
-    this.zoteroLegend.title = "仅在启用并成功核对后解释颜色；红色确认本地论文PDF可读，不代表全文完整或已阅读全文。";
+    this.zoteroLegend.title = "点击颜色标签筛选，再次点击取消。待核包含核对中、断线或附件状态未知；红色不代表全文完整或已阅读全文。";
     this.list = node(this.containerEl, "div", "rr-list");
+    this.zoteroEmpty = node(this.containerEl, "div", "rr-empty rr-zotero-empty");
+    this.zoteroEmpty.hidden = true;
     node(this.containerEl, "div", "rr-footnote", "多选 → 翻译所选论文 → 稍后读中文 · 原文/中文随时切换 · 批量译文长期保留 · 选择在关闭页面后清空");
     this.registerDomEvent(this.list, "change", event => {
       if (!event.target.classList.contains("rr-select")) return;
@@ -532,6 +541,7 @@ class RadarBlock extends MarkdownRenderChild {
     items.forEach((item, index) => {
       const row = node(this.list, "article", "rr-item");
       row.dataset.index = String(index);
+      row.dataset.zoteroStatus = "unknown";
       const top = node(row, "div", "rr-item-top");
       const checkbox = node(top, "input", "rr-select");
       checkbox.type = "checkbox"; checkbox.checked = this.selection.has(item);
@@ -569,15 +579,54 @@ class RadarBlock extends MarkdownRenderChild {
     this.updateTranslationState();
     if (items.length) this.checkZotero();
   }
+  visibleItems() {
+    return [...this.list.querySelectorAll(".rr-item")].filter(row => !row.hidden)
+      .map(row => this.items[Number(row.dataset.index)]).filter(Boolean);
+  }
+  toggleZoteroFilter(status) {
+    if (!this.plugin.settings.zotero.enabled || !["default", "pdf", "no-pdf", "unknown"].includes(status)) return;
+    this.closePopover();
+    this.activeZoteroFilter = this.activeZoteroFilter === status ? null : status;
+    this.resetReaderScroll();
+    this.updateSelection();
+  }
+  applyZoteroFilter() {
+    if (!this.plugin.settings.zotero.enabled) this.activeZoteroFilter = null;
+    const rows = [...this.list.querySelectorAll(".rr-item")];
+    const counts = { default: 0, pdf: 0, "no-pdf": 0, unknown: 0 };
+    for (const row of rows) {
+      const status = row.dataset.zoteroStatus || "unknown";
+      counts[status]++;
+      row.hidden = !!this.activeZoteroFilter && status !== this.activeZoteroFilter;
+    }
+    const visible = rows.filter(row => !row.hidden);
+    visible.forEach((row, i) => {
+      const number = row.querySelector(".rr-item-number");
+      number.textContent = `${i + 1}.`;
+      number.setAttribute("aria-label", `第 ${i + 1} 篇，共 ${visible.length} 篇`);
+    });
+    for (const button of this.zoteroLegend?.querySelectorAll(".rr-legend-filter") || []) {
+      button.setAttribute("aria-pressed", String(button.dataset.status === this.activeZoteroFilter));
+      button.textContent = `${button.dataset.label} ${counts[button.dataset.status]}`;
+    }
+    for (const empty of this.list.querySelectorAll(".rr-empty")) empty.hidden = !!this.activeZoteroFilter;
+    if (this.zoteroEmpty) {
+      this.zoteroEmpty.hidden = !this.activeZoteroFilter || visible.length > 0;
+      this.zoteroEmpty.textContent = "当前没有符合此 Zotero 状态的论文；再次点击标签可取消筛选。核对中请稍候，断线时可点击 Zotero 重试。";
+    }
+    if (this.anchor?.closest(".rr-item")?.hidden) this.closePopover();
+    return visible.length;
+  }
   updateSelection() {
+    const visibleCount = this.applyZoteroFilter();
     if (this.zoteroButton) this.zoteroButton.hidden = !this.plugin.settings.zotero.enabled;
     if (this.zoteroLegend) this.zoteroLegend.hidden = !this.plugin.settings.zotero.enabled;
-    this.selectionCount.textContent = this.activeKeyword
-      ? `筛选 ${this.items.length}/${this.unfilteredItems.length} 篇 · 已选总计 ${this.selection.size} 篇${this.zoteroSummary || ""}`
-      : `当前 ${this.items.length} 篇 · 已选 ${this.selection.size} 篇${this.zoteroSummary || ""}`;
+    this.selectionCount.textContent = this.activeKeyword || this.activeZoteroFilter
+      ? `筛选 ${visibleCount}/${this.unfilteredItems.length} 篇 · 已选总计 ${this.selection.size} 篇${this.zoteroSummary || ""}`
+      : `当前 ${visibleCount} 篇 · 已选 ${this.selection.size} 篇${this.zoteroSummary || ""}`;
     this.batchButton.textContent = this.selection.size ? `批量交给智能体（${this.selection.size}）` : "批量交给智能体";
     this.batchButton.disabled = this.clearButton.disabled = !this.selection.size;
-    this.selectAllButton.disabled = !this.items.some(item => safeLink(item.url));
+    this.selectAllButton.disabled = !this.visibleItems().some(item => safeLink(item.url));
     this.updateTranslationState();
     for (const checkbox of this.list.querySelectorAll(".rr-select")) {
       const item = this.items[Number(checkbox.closest(".rr-item").dataset.index)];
@@ -599,6 +648,14 @@ class RadarBlock extends MarkdownRenderChild {
     if (force) this.plugin.zoteroPdfCache.clear();
     const generation = this.zoteroGeneration;
     this.zoteroSummary = " · Zotero 核对中";
+    for (const row of this.list.querySelectorAll(".rr-item")) {
+      row.dataset.zoteroStatus = "unknown";
+      row.classList.remove("is-in-zotero", "is-zotero-pdf", "is-zotero-no-pdf", "is-zotero-checking");
+      row.classList.add("is-zotero-unknown");
+      const mark = row.querySelector(".rr-zotero-mark");
+      mark.hidden = false; mark.textContent = "?"; mark.title = "Zotero 状态核对中";
+      mark.setAttribute("aria-label", mark.title);
+    }
     this.updateSelection();
     if (this.zoteroButton) { this.zoteroButton.disabled = true; this.zoteroButton.textContent = "Zotero 核对中"; }
     const pending = this.plugin.loadZoteroIndex(force).then(async index => {
@@ -607,6 +664,7 @@ class RadarBlock extends MarkdownRenderChild {
       for (const row of this.list.querySelectorAll(".rr-item")) {
         const item = this.items[Number(row.dataset.index)];
         const match = findZoteroPaper(index, item);
+        row.dataset.zoteroStatus = match ? "unknown" : "default";
         const mark = row.querySelector(".rr-zotero-mark");
         row.classList.toggle("is-in-zotero", !!match);
         row.classList.toggle("is-zotero-checking", !!match);
@@ -633,6 +691,7 @@ class RadarBlock extends MarkdownRenderChild {
       let pdfCount = 0, noPdfCount = 0, unknownCount = 0;
       matches.forEach(({ row, match, mark }, i) => {
         const { status, error } = results[i];
+        row.dataset.zoteroStatus = status === "pdf" ? "pdf" : status === "no_pdf" ? "no-pdf" : "unknown";
         row.classList.remove("is-zotero-checking");
         row.classList.toggle("is-zotero-pdf", status === "pdf");
         row.classList.toggle("is-zotero-no-pdf", status === "no_pdf");
@@ -656,6 +715,7 @@ class RadarBlock extends MarkdownRenderChild {
       for (const row of this.list.querySelectorAll(".rr-item")) {
         row.classList.remove("is-in-zotero", "is-zotero-checking", "is-zotero-pdf", "is-zotero-no-pdf");
         row.classList.add("is-zotero-unknown", "is-zotero-unverified");
+        row.dataset.zoteroStatus = "unknown";
         const mark = row.querySelector(".rr-zotero-mark");
         mark.hidden = false; mark.textContent = "?";
         mark.title = "Zotero 未连接：收录及 PDF 状态均未核验，请打开 Zotero 后重试。";
@@ -1336,7 +1396,7 @@ class RadarEngine extends Plugin {
       translationQueueCount: this.translationQueue?.pending.size || 0, storageError: this.storageError,
       savedTranslationCount: Object.keys(this.savedTranslations || {}).length, translationBatch: this.getTranslationBatchStatus(),
       blocks: Array.from(this.blocks || []).map(block => ({ configPath: block.path, topicId: block.topic?.id,
-        sourceId: block.source?.id, displayedCount: block.items.length, status: block.statusEl?.textContent })) }));
+        sourceId: block.source?.id, displayedCount: block.visibleItems().length, status: block.statusEl?.textContent })) }));
   }
   onunload() {
     this.alive = false;
