@@ -1,10 +1,10 @@
 # Research Radar
 
-**0.4.3 桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
+**0.4.4 开源桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
 
 [English](README.en.md) · [更新记录](CHANGELOG.md) · [发布计划](docs/PUBLISHING.md) · [权利与署名](RIGHTS.md)
 
-当前为**私有仓库 + 私有预发布**，仅获授权测试者可访问。最低版本按已实测的Obsidian 1.13.7标注；macOS已实测，Windows/Linux尚未实机验收。未提交社区市场，尚未授予公开开源许可。
+项目按 **Apache License 2.0** 开源，版权署名为 alater；可从 GitHub Releases 下载桌面测试版。最低版本按已实测的 Obsidian 1.13.7 标注；macOS 已实测，Windows/Linux 尚未实机验收。尚未提交 Obsidian 社区市场。
 
 ![独立论文工作台](docs/images/radar-desktop.png)
 
@@ -51,7 +51,7 @@
 
 Node.js 20+：`npm ci` → `npm test` → `npm run build` → `npm run package`。构建输出在 dist，分发包在 release。打包前重建并校验文档非空、内部链接和白名单，附 SHA256。
 
-当前LICENSE为临时保留权利声明，公开开源许可尚待拥有者决定；这不限制第三方组件自身许可。详细说明见[权利与署名](RIGHTS.md)和[第三方声明](THIRD-PARTY-NOTICES.md)。GitHub私有仓库后续可以公开，但需另行决定许可证并复核全部历史。
+本项目自 0.4.4 起采用 [Apache License 2.0](LICENSE)。使用和分发时遵守许可，保留版权、许可和 [NOTICE](NOTICE)，修改文件应标明变更。允许商业使用和闭源衍生；不要求公开全部修改，也不授予项目名称或标识的商标权。第三方组件保留其自身许可。详见[权利与署名](RIGHTS.md)和[第三方声明](THIRD-PARTY-NOTICES.md)。
 
 ## Agent交接模板（0.4.1）
 
@@ -81,7 +81,7 @@ Node.js 20+：`npm ci` → `npm test` → `npm run build` → `npm run package`�
 
 ## 桌面测试反馈
 
-通过仓库Issues提交最小复现：插件/Obsidian版本、系统、服务类型、操作步骤和脱敏错误。不要上传密钥、个人data.json、整个文库或全文PDF。代码贡献与公开再分发需要先解决授权。
+通过仓库Issues提交最小复现：插件/Obsidian版本、系统、服务类型、操作步骤和脱敏错误。不要上传密钥、个人data.json、整个文库或全文PDF。代码贡献按 Apache-2.0 提交，详细流程见 [贡献说明](CONTRIBUTING.md)。
 
 ![Agent交接与Prompt模板](docs/images/agent-handoff.png)
 

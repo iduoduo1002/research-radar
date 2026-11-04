@@ -51,6 +51,6 @@ The multi-service selection design was informed by the public Easydict documenta
 
 # Project provenance and publication boundary
 
-Research Radar is the standalone continuation of the user's custom Hearth Research Radar companion engine. It does not bundle the Hearth dashboard plugin or require its API. That project history identifies origin; it does not by itself establish legal ownership of every contribution. The repository owner must resolve any employer, collaborator, copied-code or AI-assisted contribution rights before adopting an open-source license.
+Research Radar is the standalone continuation of the user's custom Hearth Research Radar companion engine. It does not bundle the Hearth dashboard plugin or require its API. That project history identifies origin; it does not by itself establish legal ownership of every contribution. The owner has authorized the project's Apache-2.0 release from 0.4.4. This license covers only rights the relevant contributors can grant and does not replace third-party licenses or establish ownership of unprotectable material.
 
 Public paper titles, journal names, source abstracts, service trademarks and APIs remain subject to their respective rights and terms. The distribution does not include a personal Vault, Zotero database, cached abstract corpus, user translations, model weights, API keys or executed Agent tasks. Dependencies retain the notices above. This is a scoped dependency/provenance check, not a comprehensive legal or security audit.

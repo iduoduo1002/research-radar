@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.4 — 2026-11-04 — Open-source desktop beta
+
+- Adopt Apache-2.0 with alater copyright attribution, NOTICE, third-party notices and contribution terms.
+- Update public download, rights and publication guidance; preserve original historical release artifacts.
+- Include license notices in both the ZIP and bundled main.js for three-file installations.
+- No functional changes; the known pop-out preview issue and unverified platform/API limits remain.
+
 ## 0.4.3 — Zotero setup and Agent guidance
 
 - Added a copyable, vault-scoped Zotero setup Prompt in settings and the command palette.

@@ -1,12 +1,12 @@
 # 安装与使用说明
 
-适用版本：Research Radar 0.4.3（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
+适用版本：Research Radar 0.4.4（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
 
-要求：Obsidian 1.13.7或更高桌面版；已实测macOS，Windows/Linux尚未实机验收。当前仓库与测试Release为私有，须有访问权限及维护者单独授权才可下载测试；尚未公开开源或上架市场。
+要求：Obsidian 1.13.7或更高桌面版；已实测macOS，Windows/Linux尚未实机验收。仓库与桌面测试版按 Apache-2.0 公开，直接从 GitHub Releases 下载；尚未上架 Obsidian 社区市场。
 
 ## 1. 安装、升级与回退
 
-1. 下载并解压 `research-radar-0.4.3.zip`。里面的文件夹名称为 `research-radar`。
+1. 下载并解压 `research-radar-0.4.4.zip`。里面的文件夹名称为 `research-radar`。
 2. 在 Obsidian 打开目标仓库，通过「设置 → 第三方插件」进入插件目录，或在文件管理器打开该库的 `.obsidian/plugins/`（隐藏目录）。
 3. 把整个 `research-radar` 文件夹放入 plugins，确保路径恰好为 `.obsidian/plugins/research-radar/manifest.json`，不要多嵌套一层文件夹。
 4. 重启 Obsidian，或刷新第三方插件列表，然后启用 **Research Radar**。仅在信任来源和代码后启用第三方插件。

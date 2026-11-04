@@ -1,14 +1,14 @@
 # Research Radar
 
-**0.4.3 · Private desktop preview for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
+**0.4.4 · Open-source desktop beta for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
 
-The repository and prerelease are private. An open-source license has not been selected. See [LICENSE](LICENSE) and [Rights and attribution](RIGHTS.md); access does not grant redistribution permission.
+Licensed under [Apache License 2.0](LICENSE), with copyright attribution to alater and contributors. Commercial use and proprietary derivatives are permitted subject to the license; retain applicable notices and mark modified files. No trademark rights are granted. See [NOTICE](NOTICE) and [Rights and attribution](RIGHTS.md).
 
 ![Independent literature workspace](docs/images/radar-desktop.png)
 
 ## Quick start
 
-1. With the owner's authorization, download the ZIP from this repository's Releases page. Put its `research-radar` folder into your vault's `.obsidian/plugins/` directory.
+1. Download the ZIP from this repository's Releases page. Put its `research-radar` folder into your vault's `.obsidian/plugins/` directory.
 2. Enable the plugin and open its ribbon icon or the “打开论文雷达” command.
 3. Edit topics, sources and keyword rules in Settings → Research Radar, then save. The initial profile is a generic example; no personal library is bundled.
 4. Translation is disabled by default. Select Ollama or an online service, save, check the connection and test a short sentence before selecting papers. Online translation requires explicit consent; paid services require your own API credentials.

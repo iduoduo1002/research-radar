@@ -1,31 +1,31 @@
-# 发布与开源计划
+# 发布与开源流程
 
-当前目标：`iduoduo1002/research-radar`私有仓库，0.4.3桌面测试版。**本阶段不改成公开，不提交插件市场。** 未来公开与开源许可证由拥有者另行批准，不能把“先私有，再开源”的路线设想当成已经完成的开源授权。
+拥有者已授权将 `iduoduo1002/research-radar` 改为公开并开源。**0.4.4 为首次 Apache-2.0 开源桌面测试版**；仍使用 pre-release 标记，尚未提交 Obsidian 社区市场。公开与远端发布是否完成，以 GitHub 实际回读为准。
 
-## 1. 私有阶段
+## 1. 发布内容与许可
 
-源码仅包含src、tests、必要构建/打包脚本、依赖锁定和项目文档；backups、test-vault、evidence、node_modules、个人data.json和.env不进入Git。图片仅使用隔离测试库的通用示例；原始证据保留本地。公开仓库或私有仓库均不得上传凭据。
+源码包含 src、tests、构建/打包脚本、依赖锁定和项目文档。backups、test-vault、evidence、node_modules、个人 data.json 和 .env 不进入 Git；四个本地未跟踪的实机脚本不随本次提交。图片使用隔离测试库通用示例，原始私人证据留本地。
 
-Release标签使用与manifest.version完全一致的`0.4.3`，不用v前缀。附`main.js`、`manifest.json`、`styles.css`、安装ZIP与SHA256；README与完整文档位于源码和ZIP。Release标为pre-release，只有有私有仓库访问权限的用户可下载，不会因此对所有人开放。
+根目录 [LICENSE](../LICENSE) 为 Apache-2.0 正式原文；[NOTICE](../NOTICE) 保留项目署名，[RIGHTS](../RIGHTS.md) 解释授权范围与边界，第三方 MIT 许可单独完整保留。版本与原始附件不可静默替换：0.4.2、0.4.3 保留历史授权，新用户下载 0.4.4。
 
-LICENSE暂为权利保留声明，package.json为UNLICENSED；第三方MIT等许可保留。版权范围与开源选项见[RIGHTS](../RIGHTS.md)。不自动邀请协作者，不自动接受外部代码授权。
+标签必须与 manifest.version 一致，0.4.4 不带 v 前缀。Release 附 main.js、manifest.json、styles.css、安装 ZIP 和 SHA256。ZIP 包含完整文档与许可；程序头部也携带项目与第三方许可，以支持市场三文件安装形式。
 
-已按拥有者授权补齐workflow权限，自动检查位于`.github/workflows/ci.yml`，在push与pull_request时执行依赖安装、自动测试和安装包检查；Actions仅申请contents:read。工作流使用固定提交的官方checkout与setup-node，远端具体运行状态以对应提交的Actions记录为准，不以文件存在代替执行通过。本地可运行相同的npm命令。
+## 2. 发布检查
 
-## 2. 转公开之前
+- 备份并验证 Git bundle 及逐文件校验；审查将被公开的全部 Git 历史、截图、Release 附件、Issues 和 Actions 日志，不只检查当前目录。
+- npm test 和 npm run package 通过，检查非空文档、链接、版本、ZIP CRC、白名单和 SHA256。
+- 推送源码与版本标签，等待对应提交 CI，通过后上传新版本附件并核对下载摘要。
+- 按拥有者授权切换为 public，使用不带认证的访问确认仓库、LICENSE 和下载地址可访问；核对 GitHub 识别为 Apache-2.0。
+- 公开后别人可下载和 fork；改回私有不能追回已公开副本，也不能撤销已经有效授出的开源许可。
 
-- 由拥有者确认版权主体、单位/合作权利、AI辅助与第三方来源，以及未来贡献授权。
-- 选定正式许可证并替换临时LICENSE。单纯改仓库可见性不会自动赋予开源许可。保留已许可第三方组件原条款。
-- 复核全部Git历史、附件、截图、Issues、Actions日志与授权范围，排除个人研究资料、密钥、旧备份与本机路径。
-- 根据实际代码和新增功能再次运行测试，检查安装/升级、内置帮助、离线/错误状态与翻译手动触发。补充真实的Windows/Linux运行证据后再扩大平台声明。
-- 固定版本、附件和对应源码；受邀测试者反馈一轮后，再明确批准将GitHub仓库改为公开。
+Actions 在 push/pull_request 执行 npm ci、npm test 和 npm run package，仅请求 contents:read；远端具体状态以运行记录为准。CI 与本地测试不代替独立安全审计、全部翻译服务或跨平台实机验收。
 
-## 3. 社区插件目录（后续独立步骤）
+## 3. 社区插件目录：后续单独提交
 
-按[官方提交说明](https://docs.obsidian.md/Plugins/Releasing/Submit%20your%20plugin)核对最新规则：可访问源码、根目录README/LICENSE/manifest、唯一插件ID、网络/付费/账号/外部文件访问披露，以及版本完全匹配的Release附件。通过Obsidian社区目录账号关联GitHub后提交；平台审核结果才代表上架，自动测试通过不等于审核通过。
+按[官方提交说明](https://docs.obsidian.md/Plugins/Releasing/Submit%20your%20plugin)核对最新规则与公开 Release 三文件安装，再通过官方社区目录提交。当前已知独立窗口预览问题须先修复；Windows/Linux 实机、付费翻译账号仍待验证，不提前宣称上架就绪。
 
-当前`minAppVersion=1.13.7`取已实测版本，不声称这是理论最早可运行版本；SecretStorage等功能需对应运行环境。isDesktopOnly保持true。后续更新维护versions.json；不要在未经验证时把最低版本降低。
+minAppVersion=1.13.7 为已实测版本，不降低未验证的兼容下限；isDesktopOnly=true。后续版本维护 versions.json。
 
-## 4. 可恢复范围
+## 4. 恢复边界
 
-本地改动前的逐文件校验备份保存在backups（不上传）；Git提交和远端私有仓库可恢复代码、文档与版本标签，不能恢复未上传的个人缓存/模型/论文全文。私有仓库不等于这些数据的备份。若以后公开，下载或fork出去的内容无法仅靠改回私有追回。
+本地 backups 保留发布前源码、文档和可验证 Git bundle，不上传。Git 不能恢复未提交的个人缓存、论文、模型或任务。发布不会修改日常 Vault、Hearth 版或用户个人 data.json。
