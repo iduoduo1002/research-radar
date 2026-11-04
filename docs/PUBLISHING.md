@@ -6,9 +6,9 @@
 
 源码包含 src、tests、构建/打包脚本、依赖锁定和项目文档。backups、test-vault、evidence、node_modules、个人 data.json 和 .env 不进入 Git；四个本地未跟踪的实机脚本不随本次提交。图片使用隔离测试库通用示例，原始私人证据留本地。
 
-根目录 [LICENSE](../LICENSE) 为 Apache-2.0 正式原文；[NOTICE](../NOTICE) 保留项目署名，[RIGHTS](../RIGHTS.md) 解释授权范围与边界，第三方 MIT 许可单独完整保留。版本与原始附件不可静默替换：0.4.2、0.4.3 保留历史授权，新用户下载最新的 0.4.5 开源测试版。
+根目录 [LICENSE](../LICENSE) 为 Apache-2.0 正式原文；[NOTICE](../NOTICE) 保留项目署名，[RIGHTS](../RIGHTS.md) 解释授权范围与边界，第三方 MIT 许可单独完整保留。版本与原始附件不可静默替换：0.4.2、0.4.3 保留历史授权，新用户下载最新的 0.4.6 开源测试版。
 
-标签必须与 manifest.version 一致，当前 0.4.5 不带 v 前缀。Release 附 main.js、manifest.json、styles.css、安装 ZIP 和 SHA256。ZIP 包含完整文档与许可；程序头部也携带项目与第三方许可，以支持市场三文件安装形式。
+标签必须与 manifest.version 一致，当前 0.4.6 不带 v 前缀。Release 附 main.js、manifest.json、styles.css、安装 ZIP 和 SHA256。ZIP 包含完整文档与许可；程序头部也携带项目与第三方许可，以支持市场三文件安装形式。
 
 ## 2. 发布检查
 
@@ -20,11 +20,13 @@
 
 Actions 在 push/pull_request 执行 npm ci、npm test 和 npm run package，仅请求 contents:read；远端具体状态以运行记录为准。CI 与本地测试不代替独立安全审计、全部翻译服务或跨平台实机验收。
 
-## 3. 社区插件目录：后续单独提交
+## 3. 社区插件目录提交
 
-按[官方提交说明](https://docs.obsidian.md/Plugins/Releasing/Submit%20your%20plugin)核对最新规则与公开 Release 三文件安装，再通过官方社区目录提交。0.4.5 已将预览和事件定位到所属窗口，并增加窗口迁移回归；真实桌面测试范围见 STATUS。Windows/Linux 实机、付费翻译账号仍待验证，不提前宣称上架就绪。
+当前官方入口是 [Obsidian Community](https://community.obsidian.md/account/plugins)，不再按旧文档向 community-plugins.json 提 PR。先发布0.4.6及匹配版本的三文件附件，再登录Obsidian账号、关联GitHub公开个人资料，选择 New plugin，填写 https://github.com/iduoduo1002/research-radar。提交后根据自动检查修改，再发布对应版本。
 
-minAppVersion=1.13.7 为已实测版本，不降低未验证的兼容下限；isDesktopOnly=true。后续版本维护 versions.json。
+提交表单要求同意开发者政策并确认继续支持插件，或无法维护时移除/转移。提交与正式可安装是不同状态；本说明不代表已经提交或审核通过，具体状态以社区管理页为准。
+
+minAppVersion=1.13.7、isDesktopOnly=true。根目录manifest、README、LICENSE、完整源码可公开读取。外部命令行安装器仅由用户手动执行，不被插件调用；插件不自安装/更新。网络、付费API、库外Zotero附件读取均已在README披露。Windows/Linux桌面及付费账号仍未实测。
 
 ## 4. 恢复边界
 

@@ -1,6 +1,6 @@
 # Research Radar
 
-**0.4.5 开源桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
+**0.4.6 开源桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
 
 [English](README.en.md) · [更新记录](CHANGELOG.md) · [发布计划](docs/PUBLISHING.md) · [权利与署名](RIGHTS.md)
 
@@ -30,6 +30,16 @@
 5. 需要 Agent 个性化配置时，把 AGENT.md 和示例 JSON 交给 Agent，生成方案后在导入窗口预览、应用。
 
 本机示例：地址 `http://127.0.0.1:11434`，模型 `hy-mt2:latest`。必须先安装该模型；GGUF 路径、llama.cpp 的端口或 `/v1` 不是这里的模型名称/服务地址。
+
+## 从 GitHub 命令行安装
+
+退出 Obsidian，将路径替换成自己的 Vault，然后执行（Python 3.9+）：
+
+```sh
+rr_installer="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.6/scripts/install.py -o "$rr_installer" && python3 "$rr_installer" --vault "/你的/Vault路径" --version 0.4.6 --obsidian-closed
+```
+
+将 `--obsidian-closed` 换成 `--dry-run` 可先预览，Vault 不发生写入。安装器校验发布包、备份旧目录并保留 data.json；首次安装后到社区插件中手动启用。Windows、升级回退和校验边界见[安装指南](docs/USER-GUIDE.md)。脚本在插件外手动运行，插件不自更新。
 
 ## 功能与边界
 

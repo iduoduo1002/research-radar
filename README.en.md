@@ -1,6 +1,6 @@
 # Research Radar
 
-**0.4.5 · Open-source desktop beta for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
+**0.4.6 · Open-source desktop beta for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
 
 Licensed under [Apache License 2.0](LICENSE), with copyright attribution to iduoduo and contributors. Commercial use and proprietary derivatives are permitted subject to the license; retain applicable notices and mark modified files. No trademark rights are granted. See [NOTICE](NOTICE) and [Rights and attribution](RIGHTS.md).
 
@@ -47,3 +47,13 @@ Zotero setup is also available as a copyable, vault-scoped Agent Prompt from set
 Use **反馈与建议** in the radar toolbar, **填写反馈** in settings, or the feedback command. Choose a bug, feature request or experience report, write your draft and inspect the preview. Opening GitHub sends the draft in a URL query; sign in and explicitly submit it there. Follow the issue for replies and release updates. A copy/manual preview fallback is available for long drafts, browser or clipboard errors.
 
 Only plugin/Obsidian versions and OS family are automatically included, with no settings, logs, library, papers, keys or personal paths. Do not enter sensitive data: the URL may remain in browser history. No telemetry or automatic issue submission is added. Current author credit: **iduoduo**; the repository account remains **iduoduo1002**.
+
+## Command-line installation
+
+Close Obsidian first. With Python 3.9+ and curl, replace the vault path:
+
+```sh
+rr_installer="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.6/scripts/install.py -o "$rr_installer" && python3 "$rr_installer" --vault "/path/to/vault" --version 0.4.6 --obsidian-closed
+```
+
+Use `--dry-run` instead of `--obsidian-closed` to preview without writing to the vault. The external, user-run installer checks SHA256/ZIP/manifest, backs up the existing directory, preserves data.json, and attempts rollback on replacement failure. It never enables plugins automatically; enable Research Radar in Community plugins after installation. The plugin does not install or update itself. See the user guide for Windows, custom configuration folders and backup recovery.

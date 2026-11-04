@@ -1,12 +1,13 @@
 {
   "name": "research-radar",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "private": true,
   "description": "Standalone personalized literature radar for Obsidian",
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "node --test tests/*.test.js",
-    "package": "node scripts/package.mjs"
+    "package": "node scripts/package.mjs",
+    "test:installer": "python3 -m unittest discover -s tests -p test_installer.py"
   },
   "devDependencies": {
     "esbuild": "0.25.12",

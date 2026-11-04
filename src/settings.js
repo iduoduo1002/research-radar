@@ -21,7 +21,7 @@ class RadarSettingsTab extends PluginSettingTab{
  constructor(app,plugin){super(app,plugin);this.plugin=plugin;this.topicIndex=0;this.sourceIndex=0;}
  display(){this.draft=clone(this.plugin.settings);this.baseRevision=this.plugin.revision;this.render();}
  render(){const e=this.containerEl;e.empty();const d=this.draft;
- e.createEl('h2',{text:'Research Radar'});e.createEl('p',{text:'独立论文工作台。修改暂存在此页，点击“保存设置”后统一生效。主题与来源可通过表单编辑，也可由 Agent 生成方案导入。'});
+ e.createEl('p',{text:'独立论文工作台。修改暂存在此页，点击“保存设置”后统一生效。主题与来源可通过表单编辑，也可由 Agent 生成方案导入。'});
  const help=new Setting(e).setName('使用帮助');
  for(const [key,label] of [['guide','安装与使用说明'],['security','安全配置说明'],['agent','Agent 配置指南'],['status','验收记录']])help.addButton(b=>b.setButtonText(label).onClick(()=>this.plugin.openHelp(key)));
  new Setting(e).setName('反馈与建议').setDesc('问题、功能建议和使用体验都可以反馈；在 GitHub 提交后可跟踪处理进展。').addButton(b=>b.setButtonText('填写反馈').onClick(()=>this.plugin.openFeedback()));
@@ -32,12 +32,12 @@ class RadarSettingsTab extends PluginSettingTab{
  new Setting(e).setName('历史回溯年数（1–20）').addText(t=>t.setValue(String(d.radar.lookbackYears)).onChange(v=>d.radar.lookbackYears=Number(v)));
  new Setting(e).setName('默认浏览范围').addDropdown(t=>t.addOptions({latest:'最新',history:'历史精选'}).setValue(d.radar.defaultView).onChange(v=>d.radar.defaultView=v));
  new Setting(e).setName('自动刷新元数据').setDesc('关闭时仅打开列表或手动刷新时检索，不启动翻译。').addToggle(t=>t.setValue(d.autoRefresh).onChange(v=>d.autoRefresh=v));
- e.createEl('h3',{text:'主题与来源'});
+ new Setting(e).setName('主题与来源').setHeading();
  this.topicIndex=Math.min(this.topicIndex,d.radar.topics.length-1);const topic=d.radar.topics[this.topicIndex];
  new Setting(e).setName('编辑主题').addDropdown(t=>{d.radar.topics.forEach((x,i)=>t.addOption(String(i),x.label));t.setValue(String(this.topicIndex)).onChange(v=>{this.topicIndex=Number(v);this.sourceIndex=0;this.render();});}).addButton(b=>b.setButtonText('添加主题').onClick(()=>{const id=`topic-${Date.now()}`;d.radar.topics.push({id,label:'新主题',keywordFilters:[],sources:[{id:'source',name:'新来源',kind:'journal',provider:'pubmed',query:'metabolomics[Title/Abstract]',signals:[]}]});this.topicIndex=d.radar.topics.length-1;this.sourceIndex=0;this.render();})).addButton(b=>b.setButtonText('删除此主题').setDisabled(d.radar.topics.length===1).onClick(()=>{d.radar.topics.splice(this.topicIndex,1);if(d.radar.defaultTopic===topic.id)d.radar.defaultTopic=d.radar.topics[0].id;this.topicIndex=0;this.sourceIndex=0;this.render();}));
  new Setting(e).setName('主题名称').addText(t=>t.setValue(topic.label).onChange(v=>topic.label=v));
  new Setting(e).setName('设为默认主题').addToggle(t=>t.setValue(d.radar.defaultTopic===topic.id).onChange(v=>{if(v)d.radar.defaultTopic=topic.id;}));
- e.createEl('h4',{text:'可点击关键词'});
+ new Setting(e).setName('可点击关键词').setHeading();
  for(const [i,f] of (topic.keywordFilters||[]).entries()){new Setting(e).setName(`关键词 ${i+1}`).addText(t=>t.setPlaceholder('标签').setValue(f.label).onChange(v=>f.label=v)).addText(t=>t.setPlaceholder(f.sourceId?'来源 ID':'英文词组，用 | 分隔').setValue(f.sourceId||f.pattern).onChange(v=>{if(f.sourceId)f.sourceId=v;else f.pattern=v;})).addButton(b=>b.setButtonText('删除').onClick(()=>{topic.keywordFilters.splice(i,1);this.render();}));}
  new Setting(e).addButton(b=>b.setButtonText('添加关键词').onClick(()=>{topic.keywordFilters??=[];topic.keywordFilters.push({label:'关键词',pattern:'keyword'});this.render();}));
  this.sourceIndex=Math.min(this.sourceIndex,topic.sources.length-1);const source=topic.sources[this.sourceIndex];
@@ -51,7 +51,7 @@ class RadarSettingsTab extends PluginSettingTab{
  else if(source.provider==='seed'){new Setting(e).setName('种子 JSON').setDesc('数组，每篇包含 doi、pmid、title。需先核对标识。').addTextArea(t=>t.setValue(JSON.stringify(source.seeds||[],null,2)).onChange(v=>{try{source.seeds=JSON.parse(v);status.textContent='';}catch{status.textContent='种子 JSON 尚未有效，请修正后保存。';source.seeds=v;}}));}
  else field('HTTPS RSS 地址','url',true);
  new Setting(e).setName('相关性规则').setDesc('一行一组：权重 | 英文关键词正则，例如 3 | flavonoid|polyphenol。为空则不额外加权。').addTextArea(t=>t.setValue((source.signals||[]).map(s=>`${s.weight} | ${s.pattern}`).join('\n')).onChange(v=>{source.signals=v.split('\n').filter(x=>x.trim()).map(x=>{const i=x.indexOf('|');return{weight:Number(x.slice(0,i).trim()),pattern:x.slice(i+1).trim()};});}));
- e.createEl('h3',{text:'翻译服务（手动触发）'});
+ new Setting(e).setName('翻译服务（手动触发）').setHeading();
  new Setting(e).setName('启用手动翻译').setDesc('悬停与中文切换只读缓存。勾选论文后点翻译才请求服务；试译需手动点击。切换服务后请保存。').addToggle(t=>t.setValue(d.translation.enabled).onChange(v=>d.translation.enabled=v));
  new Setting(e).setName('翻译服务').addDropdown(t=>t.addOptions(LABELS).setValue(d.translation.provider).onChange(v=>{d.translation.provider=v;this.render();}));
  const tr=d.translation;
@@ -110,12 +110,12 @@ class RadarSettingsTab extends PluginSettingTab{
    connection.textContent=`试译成功${t.cached?'（读取已保存译文）':''}：${t.titleZh}\n${t.abstractZh}\n现在可返回雷达勾选论文，再点击翻译。`;
   }catch(err){connection.textContent=err.message;}finally{b.setDisabled(false);}
  }));
- e.createEl('h3',{text:'本机 Zotero 与收件箱'});
+ new Setting(e).setName('本机 Zotero 与收件箱').setHeading();
  new Setting(e).setName('Zotero 本机收录标记').setDesc('只读个人库；红色为检测到本地 PDF，绿色为已收录但未发现本地 PDF。断线为待核，打开 Zotero 后可在列表点重试。需 Zotero 本机 API。').addToggle(t=>t.setValue(d.zotero.enabled).onChange(v=>d.zotero.enabled=v));
  new Setting(e).setName('Zotero 端口').addText(t=>t.setValue(String(d.zotero.port)).onChange(v=>d.zotero.port=Number(v)));
  new Setting(e).setName('Agent配置Zotero联动').setDesc('生成限定本库和本机端口的Prompt；只读核对，不下载或写库。使用已保存的端口，若修改请先保存。').addButton(b=>b.setButtonText('Zotero联动配置Prompt').onClick(()=>this.plugin.openZoteroSetup())).addButton(b=>b.setButtonText('手动配置与颜色说明').onClick(()=>this.plugin.openHelp('zotero')));
  new Setting(e).setName('论文任务收件箱').addText(t=>t.setValue(d.inboxFolder).onChange(v=>d.inboxFolder=v));
- e.createEl('h3',{text:'Agent 论文交接'});
+ new Setting(e).setName('Agent 论文交接').setHeading();
  e.createEl('p',{text:'复用你已配置的Agent，无需重设模型或工具。默认要求和背景保存一次，交接时自动生成完整Prompt。这里不自动发送或启动进程。'});
  const handoffField=(name,key,description)=>{new Setting(e).setName(name).setDesc(description);const input=e.createEl('textarea',{cls:key==='promptTemplate'?'rr-handoff-template':'rr-handoff-field'});input.setAttribute('aria-label',name);input.value=d.handoff[key];input.addEventListener('input',()=>d.handoff[key]=input.value);};
  handoffField('默认论文处理要求','defaultIntent','单篇和批量交接通用；本次额外关注点可在交接窗口补充。');
@@ -124,7 +124,7 @@ class RadarSettingsTab extends PluginSettingTab{
  const area=template.createEl('textarea',{cls:'rr-handoff-template'});area.setAttribute('aria-label','Agent执行Prompt模板');area.value=d.handoff.promptTemplate;area.addEventListener('input',()=>d.handoff.promptTemplate=area.value);
  template.createEl('p',{text:'支持 {{papers}}（必填）、{{count}}、{{intent}}、{{context}}、{{inbox}}。替换文本，不执行代码。论文身份、摘要及主题会自动填入。'});
  new Setting(e).addButton(b=>b.setButtonText('恢复内置交接模板').onClick(()=>{d.handoff.promptTemplate=DEFAULT_TEMPLATE;d.handoff.defaultIntent=DEFAULT_INTENT;this.render();status.textContent='内置模板已填入草稿，研究背景保留；保存后生效。';}));
- e.createEl('h3',{text:'Agent 与分享'});
+ new Setting(e).setName('Agent 与分享').setHeading();
  e.createEl('p',{text:'让 Agent 按文档生成 research-radar-profile JSON，在此导入并预览后应用。高级配置 API 支持版本校验，避免覆盖他人的新改动。'});
  new Setting(e).addButton(b=>b.setButtonText('保存设置').setCta().onClick(async()=>{try{await this.plugin.applySettings(d,this.baseRevision);this.display();new Notice('设置已保存');}catch(err){status.textContent=err.message;new Notice(err.message,10000);}}));
  new Setting(e).addButton(b=>b.setButtonText('导入方案').onClick(()=>new ProfileModal(this.plugin,'import').open())).addButton(b=>b.setButtonText('导出已保存方案').onClick(()=>new ProfileModal(this.plugin,'export').open()));

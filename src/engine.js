@@ -906,14 +906,14 @@ class RadarEngine extends Plugin {
           value.historyItems = clean(value.historyItems, 100);
           value.catalogItems = clean(value.catalogItems, CATALOG_LIMIT);
           if (value.provider && value.provider !== "aggregate") value.candidateCount = value.catalogItems.length;
-          value.issues = (value.issues || []).filter(group => typeof group.key === "string" && typeof group.label === "string").slice(0, 300)
+          value.issues = (Array.isArray(value.issues) ? value.issues : []).filter(group => group && typeof group.key === "string" && typeof group.label === "string").slice(0, 300)
             .map(group => ({ ...group, items: clean(group.items, 20) })).filter(group => group.items.length);
         }
       }
       this.savedTranslations = Object.fromEntries(Object.entries(data?.savedTranslations || {}).filter(([key, value]) =>
         typeof key === "string" && value && typeof value.titleZh === "string" && value.titleZh.trim() && typeof value.abstractZh === "string" && Number.isFinite(value.savedAt)));
       const batch = data?.translationBatch;
-      if (batch && Array.isArray(batch.items) && batch.items.every(task => task.item && typeof task.item.title === "string" && typeof task.item.abstract === "string") && ["queued", "running", "paused", "complete", "partial"].includes(batch.state)) {
+      if (batch && Array.isArray(batch.items) && batch.items.every(task => task && task.item && typeof task.item.title === "string" && typeof task.item.abstract === "string") && ["queued", "running", "paused", "complete", "partial"].includes(batch.state)) {
         this.translationBatch = batch;
         if (["queued", "running"].includes(batch.state)) { batch.state = "paused"; for (const task of batch.items) if (task.state === "running") task.state = "pending"; }
       }

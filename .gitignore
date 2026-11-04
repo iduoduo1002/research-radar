@@ -13,3 +13,5 @@ backups/
 data.json
 .obsidian/
 .coverage/
+
+__pycache__/

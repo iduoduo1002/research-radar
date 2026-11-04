@@ -1,12 +1,12 @@
 # 安装与使用说明
 
-适用版本：Research Radar 0.4.5（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
+适用版本：Research Radar 0.4.6（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
 
 要求：Obsidian 1.13.7或更高桌面版；已实测macOS，Windows/Linux尚未实机验收。仓库与桌面测试版按 Apache-2.0 公开，直接从 GitHub Releases 下载；尚未上架 Obsidian 社区市场。
 
 ## 1. 安装、升级与回退
 
-1. 下载并解压 `research-radar-0.4.5.zip`。里面的文件夹名称为 `research-radar`。
+1. 下载并解压 `research-radar-0.4.6.zip`。里面的文件夹名称为 `research-radar`。
 2. 在 Obsidian 打开目标仓库，通过「设置 → 第三方插件」进入插件目录，或在文件管理器打开该库的 `.obsidian/plugins/`（隐藏目录）。
 3. 把整个 `research-radar` 文件夹放入 plugins，确保路径恰好为 `.obsidian/plugins/research-radar/manifest.json`，不要多嵌套一层文件夹。
 4. 重启 Obsidian，或刷新第三方插件列表，然后启用 **Research Radar**。仅在信任来源和代码后启用第三方插件。
@@ -17,6 +17,32 @@
 **回退**：关闭插件后恢复备份的整个目录，再启用。升级后新产生的数据不在旧备份里，回退前另存当前目录。旧 Hearth 雷达仍是不同插件，独立版不会替换、停用或删除它。
 
 初次安装只附带「质谱与代谢组学 / Analytical Chemistry」示例；它不自动继承原雷达的所有主题。需要个人方案时按第 5 节导入。
+
+## 命令行安装与升级（GitHub）
+
+需要 Python 3.9+ 和网络连接。先退出 Obsidian，把下面路径换成自己的 Vault；不需要管理员权限或 GitHub Token。macOS/Linux 在终端执行：
+
+```sh
+rr_installer="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.6/scripts/install.py -o "$rr_installer" && python3 "$rr_installer" --vault "/你的/Vault路径" --version 0.4.6 --obsidian-closed
+```
+
+想先看安装计划，把 `--obsidian-closed` 换成 `--dry-run`；会下载并核对发布包，Vault 不写入文件。可先打开下载的脚本阅读再执行。执行后打开 Obsidian，在社区插件中启用 Research Radar。
+
+Windows PowerShell（已安装 Python，支持 `py -3`）：
+
+```powershell
+$rrInstaller = New-TemporaryFile
+Invoke-WebRequest 'https://raw.githubusercontent.com/iduoduo1002/research-radar/0.4.6/scripts/install.py' -OutFile $rrInstaller.FullName -ErrorAction Stop
+py -3 $rrInstaller.FullName --vault 'C:\你的Vault路径' --version 0.4.6 --obsidian-closed
+```
+
+同一命令支持升级，保留自己的 `data.json`、译文及其他个人文件。仅安装发布包白名单中的20个文件，不自动启用插件、不更改其他插件、不安装模型。支持自定义配置目录，例如 `--config-dir .obsidian-work`。不指定版本时读取最新非预发布 Release；API限流时用固定 `--version` 可跳过元数据请求。
+
+安装前检查 SHA256、ZIP路径/CRC、插件ID和版本；该校验能发现下载损坏，不是独立的数字签名。升级时旧目录完整备份到 `.obsidian/research-radar-backups/<时间>/research-radar`，旁边有逐文件 SHA256。替换中断时自动尝试恢复旧目录；磁盘损坏、断电或权限变化不能保证自动恢复。安装器拒绝符号链接、降级和并发安装。
+
+**手动回退**：退出 Obsidian，另存当前 `plugins/research-radar`，再把备份中的 `research-radar` 复制回 plugins。旧备份不含升级后的新增译文，先保存当前目录。若意外退出留下 `research-radar-install.lock`，确认没有安装进程运行且旧目录/备份完整后，再移除这个空锁目录重试。
+
+此脚本由用户在插件外手动执行；插件不会自行安装、下载更新或更新依赖。Windows/Linux脚本有自动化覆盖，但桌面UI仍仅macOS实机验收。
 
 ## 2. 五分钟开始阅读
 
@@ -253,4 +279,4 @@ DeepSeek：选择对应服务，密钥通过选择器建立独立引用；模型
 
 如果内容过长，先复制草稿，再打开反馈列表新建 Issue 粘贴。浏览器或剪贴板失败时，展开预览手动复制。不要填写密钥、完整 data.json、私人文库、研究背景或全文；链接可能保留在浏览器历史。需要私密报告的安全问题按仓库 SECURITY.md 联系。
 
-0.4.5 支持雷达主窗口、独立弹出窗口及窗口迁移后的本窗口预览、滚动定位与 Esc 关闭；关闭面板时移除预览及事件监听，不触发翻译。
+0.4.6 支持雷达主窗口、独立弹出窗口及窗口迁移后的本窗口预览、滚动定位与 Esc 关闭；关闭面板时移除预览及事件监听，不触发翻译。

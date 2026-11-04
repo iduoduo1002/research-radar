@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.6 — 2026-11-04 — Installation and regression fixes
+
+- Validate trimmed inbox paths, reject traversal/hidden directories and platform-reserved names.
+- Keep saved translations and paused batches readable when feed issue-cache data is malformed.
+- Use native setting headings.
+- Add an external, user-run Python installer with checksum/manifest verification, dry run, upgrade backup, data preservation and failure rollback.
+- Update community submission instructions for the Obsidian Community website.
+
 ## 0.4.5 — 2026-11-04 — Window fix and feedback
 
 - Update public author attribution to iduoduo; retain Apache-2.0 and third-party notices.

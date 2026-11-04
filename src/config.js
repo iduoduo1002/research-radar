@@ -18,9 +18,16 @@ const DEFAULT_SETTINGS = {
   zotero:{enabled:false,port:23119}, handoff:normalizeHandoff(), inboxFolder:'Research Radar/Inbox'
 };
 function pathInVault(value) {
-  if (typeof value !== 'string' || !value.trim() || value.startsWith('/') || /[\\:\x00-\x1f]/.test(value) || value.split('/').some(p=>!p || p==='..' || p==='.' || p.startsWith('.'))) throw Error('目录必须是普通的 Vault 相对路径，不能包含隐藏目录、绝对路径或上级路径。');
-  return value.trim();
+  const invalid=()=>{throw Error('目录必须是普通的 Vault 相对路径，不能包含隐藏目录、绝对路径、上级路径或系统保留名称。');};
+  if(typeof value!=='string')return invalid();
+  const clean=value.trim().normalize('NFC');
+  if(!clean||clean.startsWith('/')||/[\\:*?"<>|\x00-\x1f]/.test(clean))return invalid();
+  for(const part of clean.split('/')){
+    if(!part||part!==part.trim()||part.startsWith('.')||part.endsWith('.')||/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part))return invalid();
+  }
+  return clean;
 }
+
 function parse(input) {
   const text = typeof input==='string' ? input : JSON.stringify(input);
   if (text.length>512000) throw Error('配置超过 500 KB。');
