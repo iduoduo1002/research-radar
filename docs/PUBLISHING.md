@@ -6,9 +6,9 @@
 
 源码包含 src、tests、构建/打包脚本、依赖锁定和项目文档。backups、test-vault、evidence、node_modules、个人 data.json 和 .env 不进入 Git；四个本地未跟踪的实机脚本不随本次提交。图片使用隔离测试库通用示例，原始私人证据留本地。
 
-根目录 [LICENSE](../LICENSE) 为 Apache-2.0 正式原文；[NOTICE](../NOTICE) 保留项目署名，[RIGHTS](../RIGHTS.md) 解释授权范围与边界，第三方 MIT 许可单独完整保留。版本与原始附件不可静默替换：0.4.2、0.4.3 保留历史授权，新用户下载 0.4.4。
+根目录 [LICENSE](../LICENSE) 为 Apache-2.0 正式原文；[NOTICE](../NOTICE) 保留项目署名，[RIGHTS](../RIGHTS.md) 解释授权范围与边界，第三方 MIT 许可单独完整保留。版本与原始附件不可静默替换：0.4.2、0.4.3 保留历史授权，新用户下载最新的 0.4.5 开源测试版。
 
-标签必须与 manifest.version 一致，0.4.4 不带 v 前缀。Release 附 main.js、manifest.json、styles.css、安装 ZIP 和 SHA256。ZIP 包含完整文档与许可；程序头部也携带项目与第三方许可，以支持市场三文件安装形式。
+标签必须与 manifest.version 一致，当前 0.4.5 不带 v 前缀。Release 附 main.js、manifest.json、styles.css、安装 ZIP 和 SHA256。ZIP 包含完整文档与许可；程序头部也携带项目与第三方许可，以支持市场三文件安装形式。
 
 ## 2. 发布检查
 
@@ -22,7 +22,7 @@ Actions 在 push/pull_request 执行 npm ci、npm test 和 npm run package，仅
 
 ## 3. 社区插件目录：后续单独提交
 
-按[官方提交说明](https://docs.obsidian.md/Plugins/Releasing/Submit%20your%20plugin)核对最新规则与公开 Release 三文件安装，再通过官方社区目录提交。当前已知独立窗口预览问题须先修复；Windows/Linux 实机、付费翻译账号仍待验证，不提前宣称上架就绪。
+按[官方提交说明](https://docs.obsidian.md/Plugins/Releasing/Submit%20your%20plugin)核对最新规则与公开 Release 三文件安装，再通过官方社区目录提交。0.4.5 已将预览和事件定位到所属窗口，并增加窗口迁移回归；真实桌面测试范围见 STATUS。Windows/Linux 实机、付费翻译账号仍待验证，不提前宣称上架就绪。
 
 minAppVersion=1.13.7 为已实测版本，不降低未验证的兼容下限；isDesktopOnly=true。后续版本维护 versions.json。
 

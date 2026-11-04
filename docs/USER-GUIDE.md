@@ -1,12 +1,12 @@
 # 安装与使用说明
 
-适用版本：Research Radar 0.4.4（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
+适用版本：Research Radar 0.4.5（桌面测试版）。这是独立 Obsidian 插件，不需要 Hearth、Dataview 或固定 MD 笔记。安装包不附带模型、Zotero 或你的个人论文数据。
 
 要求：Obsidian 1.13.7或更高桌面版；已实测macOS，Windows/Linux尚未实机验收。仓库与桌面测试版按 Apache-2.0 公开，直接从 GitHub Releases 下载；尚未上架 Obsidian 社区市场。
 
 ## 1. 安装、升级与回退
 
-1. 下载并解压 `research-radar-0.4.4.zip`。里面的文件夹名称为 `research-radar`。
+1. 下载并解压 `research-radar-0.4.5.zip`。里面的文件夹名称为 `research-radar`。
 2. 在 Obsidian 打开目标仓库，通过「设置 → 第三方插件」进入插件目录，或在文件管理器打开该库的 `.obsidian/plugins/`（隐藏目录）。
 3. 把整个 `research-radar` 文件夹放入 plugins，确保路径恰好为 `.obsidian/plugins/research-radar/manifest.json`，不要多嵌套一层文件夹。
 4. 重启 Obsidian，或刷新第三方插件列表，然后启用 **Research Radar**。仅在信任来源和代码后启用第三方插件。
@@ -242,3 +242,15 @@ DeepSeek：选择对应服务，密钥通过选择器建立独立引用；模型
 新缓存按服务、模型、目标语言及自定义地址隔离；Bing和百炼还区分服务区域；DeepL还按Free/Pro分开。旧本地译文仍可预览（注明原模型），需要所选服务的新译文时手动批量翻译。不同在线服务的译文不会相互冒充；切回原服务可读回其缓存。空摘要只翻译标题，绝不生成摘要。关闭/重启插件会暂停批次，不自动续跑。暂停通常等待当前请求，付费API超时将关闭连接；免密钥请求超时后底层请求可能仍在结束，但不能撤回对方已接收的数据或保证不计费。
 
 参考：[Easydict服务说明](https://github.com/tisfeng/Easydict/blob/dev/docs/user-docs/en/SERVICES.md)、[DeepL API](https://developers.deepl.com/api-reference/translate/request-translation)、[DeepSeek API](https://api-docs.deepseek.com/)、[Obsidian密钥管理](https://docs.obsidian.md/plugins/guides/secret-storage)。
+
+## 反馈问题、功能和体验
+
+1. 点击雷达工具栏「反馈与建议」，设置页「填写反馈」，或命令面板「反馈问题 / 功能与体验建议」。
+2. 选择「问题反馈 / 功能建议 / 体验意见」，填写标题与具体内容。问题建议包括操作步骤、预期和实际表现；功能与体验建议写明场景、哪里不顺手及希望怎样改善。
+3. 展开「检查将要发送的内容」，核对正文及自动附带的插件版本、Obsidian 版本、系统类型；不读取个人配置或日志。
+4. 点击「在 GitHub 检查并提交」，在浏览器登录 GitHub、检查后提交。点击打开时草稿已通过链接发给 GitHub；打开或复制不代表已经发布 Issue。
+5. 通过「已有反馈 / 查看进展」先查重复问题，并在原 Issue 内跟踪回复和修复版本。无需在插件里填写 GitHub Token。
+
+如果内容过长，先复制草稿，再打开反馈列表新建 Issue 粘贴。浏览器或剪贴板失败时，展开预览手动复制。不要填写密钥、完整 data.json、私人文库、研究背景或全文；链接可能保留在浏览器历史。需要私密报告的安全问题按仓库 SECURITY.md 联系。
+
+0.4.5 支持雷达主窗口、独立弹出窗口及窗口迁移后的本窗口预览、滚动定位与 Esc 关闭；关闭面板时移除预览及事件监听，不触发翻译。

@@ -1,6 +1,6 @@
 {
   "name": "research-radar",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "private": true,
   "description": "Standalone personalized literature radar for Obsidian",
   "scripts": {
@@ -20,5 +20,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/iduoduo1002/research-radar.git"
-  }
+  },
+  "author": "iduoduo"
 }

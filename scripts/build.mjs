@@ -1,3 +1,4 @@
+/* Modified 2026-11-04: iduoduo public beta, owner-window preview and feedback. */
 import {build} from 'esbuild';
 import fs from 'node:fs/promises';
 await fs.mkdir('dist/research-radar',{recursive:true});

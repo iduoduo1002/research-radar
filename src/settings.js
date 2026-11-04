@@ -1,3 +1,4 @@
+/* Modified 2026-11-04: iduoduo public beta, owner-window preview and feedback. */
 'use strict';
 const {PluginSettingTab,Setting,Modal,Notice,SecretComponent}=require('obsidian');
 const {LABELS,AI}=require('./translation');
@@ -23,6 +24,7 @@ class RadarSettingsTab extends PluginSettingTab{
  e.createEl('h2',{text:'Research Radar'});e.createEl('p',{text:'独立论文工作台。修改暂存在此页，点击“保存设置”后统一生效。主题与来源可通过表单编辑，也可由 Agent 生成方案导入。'});
  const help=new Setting(e).setName('使用帮助');
  for(const [key,label] of [['guide','安装与使用说明'],['security','安全配置说明'],['agent','Agent 配置指南'],['status','验收记录']])help.addButton(b=>b.setButtonText(label).onClick(()=>this.plugin.openHelp(key)));
+ new Setting(e).setName('反馈与建议').setDesc('问题、功能建议和使用体验都可以反馈；在 GitHub 提交后可跟踪处理进展。').addButton(b=>b.setButtonText('填写反馈').onClick(()=>this.plugin.openFeedback()));
  const status=e.createEl('p',{cls:'rr-config-status'});
  new Setting(e).addButton(b=>b.setButtonText('打开雷达').onClick(()=>this.plugin.openRadar())).addButton(b=>b.setButtonText('保存设置').setCta().onClick(async()=>{try{await this.plugin.applySettings(d,this.baseRevision);this.display();new Notice('设置已保存');}catch(err){status.textContent=err.message;}})).addButton(b=>b.setButtonText('恢复上一版').onClick(async()=>{try{await this.plugin.rollbackSettings();this.display();new Notice('已恢复上一版设置');}catch(err){status.textContent=err.message;}}));
  const number=(name,key)=>new Setting(e).setName(name).addText(t=>t.setValue(String(d[key])).onChange(v=>d[key]=Number(v)));

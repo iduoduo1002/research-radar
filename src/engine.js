@@ -1,3 +1,4 @@
+/* Modified 2026-11-04: iduoduo public beta, owner-window preview and feedback. */
 const onlineTranslation = require('./translation');
 "use strict";
 
@@ -81,7 +82,7 @@ async function hasLocalPdfFile(key, port) {
 }
 
 function node(parent, tag, cls, text) {
-  const el = document.createElement(tag);
+  const el = parent.ownerDocument.createElement(tag);
   if (cls) el.className = cls;
   if (text !== undefined) el.textContent = String(text);
   parent.appendChild(el);
@@ -295,6 +296,10 @@ class RadarBlock extends MarkdownRenderChild {
     this.zoteroButton.hidden = !this.plugin.settings.zotero.enabled;
     this.zoteroButton.title = "仅重新核对 Zotero，不刷新论文、不启动模型。红：有本地论文 PDF；绿：已收录无本地 PDF；原色：未收录；琥珀：待核。";
     this.registerDomEvent(this.zoteroButton, "click", () => this.checkZotero(true));
+    this.feedbackButton = node(toolbar, "button", "rr-feedback", "反馈与建议");
+    this.feedbackButton.type = "button";
+    this.feedbackButton.title = "问题反馈、功能建议与体验意见；由你检查后在 GitHub 提交";
+    this.registerDomEvent(this.feedbackButton, "click", () => this.plugin.openFeedback());
     this.coverageEl = node(this.navigationEl, "details", "rr-coverage");
     this.zoteroLegend = node(this.navigationEl, "div", "rr-zotero-legend");
     this.zoteroLegend.setAttribute("aria-label", "Zotero标题颜色图例");
@@ -340,19 +345,44 @@ class RadarBlock extends MarkdownRenderChild {
         this.openByAnchor(row.querySelector(".rr-title"), true);
       }
     });
-    this.registerDomEvent(document, "keydown", event => {
-      if (event.key === "Escape" && this.popover) {
+    this.bindReaderWindow();
+    this.register(() => this.unbindReaderWindow());
+    if (typeof this.containerEl.onWindowMigrated === "function") {
+      this.register(this.containerEl.onWindowMigrated(() => {
+        if (!this.alive) return;
         this.closePopover();
-        event.stopPropagation();
-      }
-    });
-    this.registerDomEvent(window, "resize", () => this.positionPopover());
-    this.registerDomEvent(document, "scroll", () => this.positionPopover(), true);
+        this.bindReaderWindow();
+      }));
+    }
+    // Timers use the main scheduler; migration only rebinds viewport/document events.
     if (this.plugin.settings.autoRefresh) this.registerInterval(window.setInterval(() => this.fetchCurrent(false), FEED_TTL));
-    this.registerDomEvent(window, "focus", () => this.refreshZoteroIfNeeded());
     this.registerInterval(window.setInterval(() => this.refreshZoteroIfNeeded(), 60000));
     this.plugin.blocks.add(this);
     this.loadConfiguration().catch(error => this.showError(error));
+  }
+  bindReaderWindow() {
+    const doc = this.containerEl.ownerDocument, win = doc.defaultView;
+    if (this.readerDocument === doc && this.readerWindow === win) return;
+    this.closePopover();
+    this.unbindReaderWindow();
+    this.readerDocument = doc; this.readerWindow = win;
+    this.readerEventCleanup = [];
+    const listen = (target, type, fn, options) => {
+      target.addEventListener(type, fn, options);
+      this.readerEventCleanup.push(() => target.removeEventListener(type, fn, options));
+    };
+    listen(doc, "keydown", event => {
+      if (event.key === "Escape" && this.popover) { this.closePopover(); event.stopPropagation(); }
+    });
+    listen(win, "resize", () => this.positionPopover());
+    listen(doc, "scroll", () => this.positionPopover(), true);
+    listen(win, "focus", () => this.refreshZoteroIfNeeded());
+    listen(doc, "visibilitychange", () => this.refreshZoteroIfNeeded());
+  }
+  unbindReaderWindow() {
+    for (const cleanup of this.readerEventCleanup || []) cleanup();
+    this.readerEventCleanup = [];
+    this.readerDocument = null; this.readerWindow = null;
   }
   async loadConfiguration() {
     await this.plugin.ready;
@@ -694,6 +724,7 @@ class RadarBlock extends MarkdownRenderChild {
   openByAnchor(anchor, focus) {
     clearTimeout(this.hoverTimer);
     clearTimeout(this.closeTimer);
+    this.bindReaderWindow();
     const index = Number(anchor.closest(".rr-item").dataset.index);
     const item = this.items[index];
     if (!item || !this.alive) return;
@@ -707,7 +738,7 @@ class RadarBlock extends MarkdownRenderChild {
     this.popupGeneration++;
     // Preview reads saved translations only. New model work belongs to the manual batch.
     this.popupMode = this.plugin.getTranslation(item) ? "zh" : "original";
-    const popup = node(document.body, "div", "rr-popover");
+    const popup = node(anchor.ownerDocument.body, "div", "rr-popover");
     this.popover = popup;
     popup.tabIndex = -1;
     popup.setAttribute("role", "dialog");
@@ -756,15 +787,17 @@ class RadarBlock extends MarkdownRenderChild {
   }
   positionPopover() {
     if (!this.popover || !this.anchor?.isConnected) return;
+    const win = this.anchor.ownerDocument.defaultView;
+    if (this.popover.ownerDocument !== this.anchor.ownerDocument) { this.closePopover(); return; }
     const rect = this.anchor.getBoundingClientRect();
-    const width = Math.min(580, window.innerWidth - 32);
+    const width = Math.min(580, win.innerWidth - 32);
     this.popover.style.width = `${width}px`;
-    this.popover.style.left = `${Math.max(16, Math.min(rect.left, window.innerWidth - width - 16))}px`;
-    const maxHeight = Math.min(620, window.innerHeight - 48);
+    this.popover.style.left = `${Math.max(16, Math.min(rect.left, win.innerWidth - width - 16))}px`;
+    const maxHeight = Math.min(620, win.innerHeight - 48);
     this.popover.style.maxHeight = `${maxHeight}px`;
     const height = Math.min(this.popover.scrollHeight, maxHeight);
     const below = rect.bottom + 10;
-    const top = below + height < window.innerHeight - 16 ? below : Math.max(16, rect.top - height - 10);
+    const top = below + height < win.innerHeight - 16 ? below : Math.max(16, rect.top - height - 10);
     this.popover.style.top = `${top}px`;
   }
   closePopover() {
@@ -777,6 +810,7 @@ class RadarBlock extends MarkdownRenderChild {
     this.alive = false;
     this.generation++;
     this.closePopover();
+    this.unbindReaderWindow();
     this.plugin.blocks.delete(this);
     this.containerEl.replaceChildren();
   }

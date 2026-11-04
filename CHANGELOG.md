@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.5 — 2026-11-04 — Window fix and feedback
+
+- Update public author attribution to iduoduo; retain Apache-2.0 and third-party notices.
+- Render paper previews in the owner document and viewport; rebind Escape, scroll, resize and focus events after window migration and clean them up on unload.
+- Add user-reviewed bug, feature and experience drafts from the toolbar, settings and command palette, with GitHub follow-up and copy/manual fallbacks.
+- Do not collect private diagnostics, auto-submit issues or trigger translation.
+
 ## 0.4.4 — 2026-11-04 — Open-source desktop beta
 
 - Adopt Apache-2.0 with alater copyright attribution, NOTICE, third-party notices and contribution terms.

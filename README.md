@@ -1,10 +1,10 @@
 # Research Radar
 
-**0.4.4 开源桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
+**0.4.5 开源桌面测试版** · 独立 Obsidian 科研文献工作台。无需 Hearth 或固定 MD 文件。
 
 [English](README.en.md) · [更新记录](CHANGELOG.md) · [发布计划](docs/PUBLISHING.md) · [权利与署名](RIGHTS.md)
 
-项目按 **Apache License 2.0** 开源，版权署名为 alater；可从 GitHub Releases 下载桌面测试版。最低版本按已实测的 Obsidian 1.13.7 标注；macOS 已实测，Windows/Linux 尚未实机验收。尚未提交 Obsidian 社区市场。
+项目按 **Apache License 2.0** 开源，版权署名为 iduoduo；可从 GitHub Releases 下载桌面测试版。最低版本按已实测的 Obsidian 1.13.7 标注；macOS 已实测，Windows/Linux 尚未实机验收。尚未提交 Obsidian 社区市场。
 
 ![独立论文工作台](docs/images/radar-desktop.png)
 
@@ -90,3 +90,11 @@ Node.js 20+：`npm ci` → `npm test` → `npm run build` → `npm run package`�
 ## 联网、账号与付费披露
 
 文献发现访问PubMed、Crossref、Europe PMC和允许名单内的RSS；翻译仅在手动操作并获得相应授权后向选中服务发送标题/摘要。Zotero联动访问本机API，并可能读取库外论文附件的开头确认PDF。原文链接打开外部网站。插件没有内置遥测；基础阅读不要求插件账号，部分翻译需各服务自己的账号/API权限，可能收费。详细数据目的地见[安全说明](docs/SECURITY.md)。
+
+## 反馈与持续改进
+
+雷达工具栏的 **反馈与建议**、设置页的 **填写反馈**，以及命令面板的 **反馈问题 / 功能与体验建议**，均可打开反馈窗口。选择「问题反馈 / 功能建议 / 体验意见」，填写标题和具体内容，检查草稿后点击「在 GitHub 检查并提交」。浏览器需要登录自己的 GitHub 账号，再由你最终提交；可在同一个 Issue 中补充脱敏信息并跟踪回复、修复和版本。
+
+也可以复制草稿，或通过[反馈列表](https://github.com/iduoduo1002/research-radar/issues)先看是否已有相同问题。长草稿或浏览器/剪贴板失败时，使用可展开预览手动复制，不自动重试或发送。
+
+不自动上传日志、文库、论文、设置、研究背景或 Zotero 信息。草稿只自动带插件版本、Obsidian 版本和系统类型；点击打开 GitHub 后，草稿文本会通过 URL 查询参数发送给 GitHub，可能留在浏览器历史中。不要填入密钥或私人材料。维护者按问题复现、优先级和验证结果处理，再通过版本更新记录反馈；不承诺所有建议一定实现或固定时限。

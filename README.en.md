@@ -1,8 +1,8 @@
 # Research Radar
 
-**0.4.4 · Open-source desktop beta for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
+**0.4.5 · Open-source desktop beta for Obsidian.** A configurable literature workspace with topics, journal sources, keyword filters, manual translation and optional read-only Zotero status. It runs without Hearth or a fixed Markdown note.
 
-Licensed under [Apache License 2.0](LICENSE), with copyright attribution to alater and contributors. Commercial use and proprietary derivatives are permitted subject to the license; retain applicable notices and mark modified files. No trademark rights are granted. See [NOTICE](NOTICE) and [Rights and attribution](RIGHTS.md).
+Licensed under [Apache License 2.0](LICENSE), with copyright attribution to iduoduo and contributors. Commercial use and proprietary derivatives are permitted subject to the license; retain applicable notices and mark modified files. No trademark rights are granted. See [NOTICE](NOTICE) and [Rights and attribution](RIGHTS.md).
 
 ![Independent literature workspace](docs/images/radar-desktop.png)
 
@@ -41,3 +41,9 @@ Discovery uses configured PubMed, Crossref, Europe PMC or allowlisted RSS domain
 Report a minimal reproduction using the repository issue template. Remove credentials, private project context, PDFs and runtime data first. Development: Node.js 20+, `npm ci`, `npm test`, `npm run build`, `npm run package`. Tests do not constitute an independent security audit or scientific validation. This preview is not listed in the Obsidian community directory.
 
 Zotero setup is also available as a copyable, vault-scoped Agent Prompt from settings or the command palette. See [the Zotero guide](docs/ZOTERO.md). Red = matched with a readable local article PDF; green = matched without a verified local PDF; amber/? = unverified. Original color means unmatched only after a successful enabled check.
+
+## Feedback and follow-up
+
+Use **反馈与建议** in the radar toolbar, **填写反馈** in settings, or the feedback command. Choose a bug, feature request or experience report, write your draft and inspect the preview. Opening GitHub sends the draft in a URL query; sign in and explicitly submit it there. Follow the issue for replies and release updates. A copy/manual preview fallback is available for long drafts, browser or clipboard errors.
+
+Only plugin/Obsidian versions and OS family are automatically included, with no settings, logs, library, papers, keys or personal paths. Do not enter sensitive data: the URL may remain in browser history. No telemetry or automatic issue submission is added. Current author credit: **iduoduo**; the repository account remains **iduoduo1002**.

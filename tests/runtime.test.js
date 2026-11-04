@@ -1,3 +1,4 @@
+/* Modified 2026-11-04: iduoduo public beta, owner-window preview and feedback. */
 require.extensions['.md']=(module,file)=>{module.exports=require('node:fs').readFileSync(file,'utf8');};
 const {test,before}=require('node:test'),assert=require('node:assert/strict'),Module=require('node:module'),{JSDOM}=require('jsdom');
 const dom=new JSDOM('<body></body>',{url:'https://local.test'});for(const k of ['window','document','DOMParser','localStorage','navigator','HTMLElement'])Object.defineProperty(global,k,{value:dom.window[k],configurable:true});
@@ -194,4 +195,67 @@ test('Zotero verification reports counts only and preserves red/green/unknown wi
  try{const result=await p.checkZoteroConnection();assert.deepEqual(result.panels,[{displayed:4,pdf:1,noPdf:1,unknown:1,unmatched:1}]);assert.ok(!JSON.stringify(result).includes('privateRecord'));assert.equal(requests.length,0);assert.equal(p.diagnostics.translationRequests,0);
  p.loadZoteroIndex=async()=>{p.revision++;return {count:4};};await assert.rejects(p.checkZoteroConnection(),/变化/);
  }finally{p.blocks.delete(b);el.remove();p.onunload();}
+});
+
+test('pop-out initial render uses its document and viewport; Escape and unload stay local',async()=>{
+ stored=null;requests=[];const p=await plugin(),other=new JSDOM('<body></body>',{url:'https://popout.test'});
+ const host=other.window.document.createElement('div');other.window.document.body.append(host);Object.defineProperty(other.window,'innerWidth',{value:380,configurable:true});
+ const b=new RadarBlock(host,p,'@settings');b.load();await new Promise(r=>setTimeout(r,20));
+ const item={title:'Pop-out paper',abstract:'Original abstract',url:'https://doi.org/10.1000/popout'};
+ try{
+  b.renderItems([item]);const anchor=b.list.querySelector('.rr-title');b.openByAnchor(anchor,false);
+  assert.equal(b.popover.ownerDocument,other.window.document);assert.equal(document.querySelector('.rr-popover'),null);assert.equal(b.popover.style.width,'348px');
+  document.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape'}));assert.ok(b.popover);
+  other.window.document.dispatchEvent(new other.window.KeyboardEvent('keydown',{key:'Escape'}));assert.equal(b.popover,null);
+  b.openByAnchor(anchor,false);let refreshes=0;b.refreshZoteroIfNeeded=()=>refreshes++;other.window.dispatchEvent(new other.window.Event('focus'));assert.equal(refreshes,1);
+  b.unload();assert.equal(other.window.document.querySelector('.rr-popover'),null);other.window.dispatchEvent(new other.window.Event('focus'));assert.equal(refreshes,1);assert.equal(p.diagnostics.translationRequests,0);
+ }finally{b.unload();p.onunload();other.window.close();}
+});
+
+test('window migration closes old preview, rebinds events both ways and unregisters the hook',async()=>{
+ stored=null;const p=await plugin(),other=new JSDOM('<body></body>',{url:'https://migrated.test'});
+ const host=document.createElement('div');document.body.append(host);let migration,unregistered=0;
+ host.onWindowMigrated=fn=>{migration=fn;return()=>unregistered++;};
+ const b=new RadarBlock(host,p,'@settings');b.load();await new Promise(r=>setTimeout(r,20));
+ try{
+  b.renderItems([{title:'Migrating paper',abstract:'Abstract',url:'https://doi.org/10.1000/move'}]);const anchor=b.list.querySelector('.rr-title');b.openByAnchor(anchor,false);const old=b.popover;
+  other.window.document.body.append(other.window.document.adoptNode(host));migration(other.window);assert.equal(old.isConnected,false);assert.equal(b.popover,null);assert.equal(b.readerWindow,other.window);
+  b.openByAnchor(anchor,false);assert.equal(b.popover.ownerDocument,other.window.document);
+  let refreshes=0;b.refreshZoteroIfNeeded=()=>refreshes++;window.dispatchEvent(new window.Event('focus'));assert.equal(refreshes,0);other.window.dispatchEvent(new other.window.Event('focus'));assert.equal(refreshes,1);
+  document.body.append(document.adoptNode(host));migration(window);assert.equal(b.popover,null);b.openByAnchor(anchor,false);assert.equal(b.popover.ownerDocument,document);
+  other.window.dispatchEvent(new other.window.Event('focus'));assert.equal(refreshes,1);window.dispatchEvent(new window.Event('focus'));assert.equal(refreshes,2);
+  b.unload();assert.equal(unregistered,1);assert.equal(p.diagnostics.translationRequests,0);
+ }finally{host.remove();p.onunload();other.window.close();}
+});
+
+test('feedback draft validates type and text, encodes only visible fields and identifies long URLs',()=>{
+ const {feedbackDraft,environment,TYPES}=require('../src/feedback');
+ const env=environment({manifest:{version:'0.4.5'},settings:{apiKey:'PRIVATE_KEY',projectContext:'PRIVATE_PROJECT'},app:{vault:{name:'PRIVATE_VAULT'}}});
+ for(const type of Object.keys(TYPES)){
+  const d=feedbackDraft(type,'按钮 & 空间','希望筛选更紧凑 <example>',env),url=new URL(d.url);
+  assert.equal(url.origin,'https://github.com');assert.equal(url.pathname,'/iduoduo1002/research-radar/issues/new');assert.equal(url.searchParams.get('body'),d.body);assert.equal(url.searchParams.get('template'),TYPES[type].template);
+  assert.ok(!JSON.stringify(d).includes('PRIVATE_'));assert.match(d.body,/0.4.5/);assert.equal(d.urlTooLong,false);
+ }
+ assert.throws(()=>feedbackDraft('bad','a','b',env));assert.throws(()=>feedbackDraft('bug',' ','b',env));assert.throws(()=>feedbackDraft('bug','a','',env));assert.throws(()=>feedbackDraft('bug','a','x'.repeat(5001),env));
+ assert.equal(feedbackDraft('experience','体验','字'.repeat(4000),env).urlTooLong,true);
+});
+
+test('feedback form previews but never submits; copy failure and oversized drafts have local fallback',async()=>{
+ stored=null;requests=[];const p=await plugin(),modal=p.openFeedback();const opened=[];modal.openExternal=async url=>opened.push(url);let copied='';modal.copyText=async text=>{copied=text;};
+ try{
+  assert.equal(modal.submitButton.disabled,true);assert.equal(opened.length,0);assert.equal(p.diagnostics.translationRequests,0);
+  modal.titleInput.value='筛选问题';modal.detailsInput.value='步骤：选择主题，期望保留筛选。';modal.detailsInput.dispatchEvent(new window.Event('input'));
+  assert.equal(modal.submitButton.disabled,false);assert.ok(modal.preview.textContent.includes('筛选问题'));
+  modal.copyButton.click();await new Promise(r=>setTimeout(r,0));assert.match(copied,/筛选问题/);assert.equal(opened.length,0);
+  modal.submitButton.click();await new Promise(r=>setTimeout(r,0));assert.equal(opened.length,1);assert.match(modal.status.textContent,/尚未提交/);
+  modal.copyText=async()=>{throw Error('clipboard denied');};modal.copyButton.click();await new Promise(r=>setTimeout(r,0));assert.match(modal.status.textContent,/手动选择复制/);
+  modal.detailsInput.value='字'.repeat(4000);modal.detailsInput.dispatchEvent(new window.Event('input'));modal.submitButton.click();await new Promise(r=>setTimeout(r,0));assert.equal(opened.length,1);assert.match(modal.status.textContent,/过长/);
+  modal.detailsInput.value='普通反馈';modal.detailsInput.dispatchEvent(new window.Event('input'));modal.openExternal=async()=>{throw Error('browser denied');};modal.submitButton.click();await new Promise(r=>setTimeout(r,0));assert.match(modal.status.textContent,/未能打开/);assert.equal(requests.length,0);
+ }finally{modal.close();p.onunload();}
+});
+
+test('feedback entry points exist in settings and the radar toolbar',async()=>{
+ stored=null;const p=await plugin();p.tab.display();assert.ok(p.tab.containerEl.textContent.includes('填写反馈'));
+ const b=new RadarBlock(document.createElement('div'),p,'@settings');b.load();await new Promise(r=>setTimeout(r,20));let opens=0;p.openFeedback=()=>opens++;
+ b.feedbackButton.click();assert.equal(opens,1);assert.equal(p.diagnostics.translationRequests,0);b.unload();p.onunload();
 });

@@ -1,3 +1,4 @@
+/* Modified 2026-11-04: iduoduo public beta, owner-window preview and feedback. */
 'use strict';
 const {ItemView,Notice}=require('obsidian');
 const {RadarEngine,RadarBlock}=require('./engine');
@@ -5,6 +6,7 @@ const {DEFAULT_SETTINGS,normalizeSettings,normalizeRadar,profile,mergeProfile,de
 const {RadarSettingsTab,ProfileModal}=require('./settings');
 const {saveTask}=require('./handoff');
 const {HelpModal}=require('./help');
+const {FeedbackModal}=require('./feedback');
 const {normalizeZotero,ZoteroSetupModal}=require('./zotero-setup');
 const VIEW='research-radar-view';
 class RadarView extends ItemView{
@@ -27,8 +29,10 @@ class ResearchRadar extends RadarEngine{
   this.addSettingTab(new RadarSettingsTab(this.app,this));
   this.addCommand({id:'zotero-setup',name:'Zotero联动配置Prompt',callback:()=>this.openZoteroSetup()});
   this.addCommand({id:'help',name:'安装与使用说明',callback:()=>this.openHelp()});
+  this.addCommand({id:'feedback',name:'反馈问题 / 功能与体验建议',callback:()=>this.openFeedback()});
   this.registerMarkdownCodeBlockProcessor('research-radar-view',(_source,el,ctx)=>{ctx.addChild(new RadarBlock(el,this,'@settings'));});
  }
+ openFeedback(){const modal=new FeedbackModal(this);modal.open();return modal;}
  openHelp(key='guide'){const modal=new HelpModal(this,key);modal.open();return modal;}
  async openRadar(){let leaf=this.app.workspace.getLeavesOfType(VIEW)[0];if(!leaf){leaf=this.app.workspace.getLeaf('tab');await leaf.setViewState({type:VIEW,active:true});}await this.app.workspace.revealLeaf(leaf);}
  openZoteroSetup(){const modal=new ZoteroSetupModal(this);modal.open();return modal;}

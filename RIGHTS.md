@@ -1,6 +1,6 @@
 # 权利与署名说明 / Rights and attribution
 
-维护者与项目署名：**alater**（GitHub：iduoduo1002）。日期：2026-11-04。
+维护者与项目署名：**iduoduo**（GitHub：iduoduo1002）。日期：2026-11-04。
 
 ## 正式许可
 

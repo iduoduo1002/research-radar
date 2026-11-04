@@ -1,3 +1,4 @@
+/* Modified 2026-11-04: iduoduo public beta, owner-window preview and feedback. */
 .research-radar {
   --rr-accent: #88dae9;
   color: var(--text-normal, #e4eef8);
@@ -223,3 +224,13 @@
 .theme-light .rr-zotero-legend .rr-legend-pdf { color:#a52b3c; }
 .theme-light .rr-zotero-legend .rr-legend-no-pdf { color:#176c43; }
 .theme-light .rr-zotero-legend .rr-legend-unknown { color:#8a651d; }
+
+/* Feedback remains user-reviewed and local until the browser is explicitly opened. */
+.modal.rr-feedback-container { width: min(740px, calc(100vw - 32px)); }
+.rr-feedback-modal p { font-size: var(--font-ui-small); }
+.rr-feedback-note { color: var(--text-muted); }
+.rr-feedback-label { display: flex; flex-direction: column; gap: 5px; margin: 12px 0; font-size: var(--font-ui-small); }
+.rr-feedback-label input, .rr-feedback-label textarea, .rr-feedback-label select { width: 100%; }
+.rr-feedback-label textarea { resize: vertical; min-height: 140px; }
+.rr-feedback-preview { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 240px; overflow-y: auto; font-size: var(--font-ui-small); }
+.rr-feedback-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
