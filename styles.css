@@ -1,0 +1,215 @@
+.research-radar {
+  --rr-accent: #88dae9;
+  color: var(--text-normal, #e4eef8);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  padding: 2px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.rr-topics, .rr-sources, .rr-description {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
+}
+.rr-topics { margin-bottom: 5px; }
+.research-radar button {
+  color: var(--text-muted, #b2c5db);
+  border: 1px solid var(--background-modifier-border, #456179);
+  background: rgba(131, 164, 192, .08);
+  box-shadow: none;
+  cursor: pointer;
+  min-height: 28px;
+  height: auto;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  white-space: normal;
+}
+.research-radar button[aria-pressed="true"] {
+  color: var(--rr-accent);
+  background: rgba(93, 193, 215, .14);
+  border-color: rgba(124, 210, 230, .55);
+}
+.research-radar button:hover { background: rgba(139, 187, 223, .2); }
+.research-radar .rr-topics button,
+.research-radar .rr-sources button {
+  flex: 0 0 auto; min-height: 25px; padding: 3px 9px;
+  border-radius: 6px; line-height: 1.3; white-space: nowrap;
+}
+.research-radar button:focus-visible, .rr-title:focus-visible {
+  outline: 2px solid #88dae9; outline-offset: 3px;
+}
+.rr-description { margin: 0 0 7px; }
+.rr-description:empty { display: none; }
+.research-radar .rr-keyword {
+  display: inline-flex; align-items: center; flex: 0 0 auto;
+  min-height: 22px; padding: 2px 7px;
+  color: #b9dbe5; background: rgba(120, 179, 202, .09);
+  border: 1px solid rgba(120, 179, 202, .23); border-radius: 5px;
+  font-size: 11px; line-height: 1.25; white-space: nowrap;
+}
+.research-radar .rr-keyword[aria-pressed="true"] {
+  color: #e2f9ff; background: rgba(79, 183, 207, .25);
+  border-color: rgba(135, 222, 239, .72);
+}
+.rr-toolbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; margin: 6px 0 3px; }
+.rr-status { flex: 1 1 160px; min-width: 120px; }
+.research-radar .rr-view-select { max-width: 100%; min-height: 30px; color: var(--rr-accent); font-size: 12px; }
+.rr-status { color: var(--text-muted, #b2c5db); font-size: 11px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.research-radar .rr-refresh { flex-shrink: 0; }
+.rr-coverage { color: var(--text-muted, #b2c5db); font-size: 11px; margin: 0; }
+.rr-coverage-summary { width: fit-content; cursor: pointer; white-space: nowrap; }
+.rr-coverage-detail { margin-top: 3px; line-height: 1.45; }
+.rr-search-link { display: inline-block; margin: 3px 0 0; }
+.rr-list { display: flex; flex-direction: column; }
+.rr-item { border-top: 1px solid var(--background-modifier-border, #456179); padding: 8px 0 7px; }
+.rr-item-top { display: flex; gap: 4px; align-items: flex-start; }
+.rr-item-number {
+  flex: 0 0 auto; color: var(--rr-accent); font-size: 12px; font-weight: 650;
+  line-height: 1.75; text-align: left; font-variant-numeric: tabular-nums;
+}
+.rr-item.is-zotero-pdf { box-shadow: inset 2px 0 rgba(239, 118, 128, .72); }
+.rr-item.is-zotero-no-pdf { box-shadow: inset 2px 0 rgba(104, 204, 157, .72); }
+.rr-item.is-zotero-unknown { box-shadow: inset 2px 0 rgba(219, 183, 104, .72); }
+.rr-item.is-zotero-pdf .rr-item-number { color: #ff9c9f; }
+.rr-item.is-zotero-no-pdf .rr-item-number { color: #83dcb1; }
+.rr-item.is-zotero-unknown .rr-item-number { color: #e6c889; }
+.rr-zotero-mark {
+  flex: 0 0 16px; width: 16px; height: 16px; margin-top: 3px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #9aebc3; background: rgba(76, 170, 116, .18);
+  border: 1px solid rgba(122, 211, 159, .45); border-radius: 50%;
+  font-size: 11px; font-weight: 700; line-height: 1;
+}
+.research-radar .rr-title {
+  flex: 1; min-width: 0; color: var(--text-normal, #e4eef8); font-size: 14px; font-weight: 580;
+  text-decoration: none; line-height: 1.5; overflow-wrap: anywhere;
+}
+.research-radar .rr-title:hover { color: var(--rr-accent); }
+.research-radar .rr-item.is-zotero-pdf .rr-title { color: #ff9c9f; }
+.research-radar .rr-item.is-zotero-no-pdf .rr-title { color: #8fdfaf; }
+.research-radar .rr-item.is-zotero-unknown .rr-title { color: #e6c889; }
+.rr-item.is-zotero-pdf .rr-zotero-mark {
+  color: #ffc4c6; background: rgba(198, 72, 79, .18); border-color: rgba(246, 134, 139, .52);
+}
+.rr-item.is-zotero-unknown .rr-zotero-mark {
+  color: #e6c889; background: rgba(181, 141, 57, .17); border-color: rgba(219, 183, 104, .5);
+}
+.research-radar .rr-chinese { flex-shrink: 0; padding: 2px 7px; min-height: 24px; font-size: 11px; }
+.rr-item-meta { color: var(--text-muted, #b2c5db); font-size: 11px; line-height: 1.45; margin-top: 3px; }
+.rr-preview { color: var(--text-muted, #b2c5db); margin-top: 4px; font-size: 12px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rr-footnote, .rr-empty { color: var(--text-muted, #b2c5db); font-size: 11px; margin: 12px 0; }
+.rr-popover {
+  position: fixed; z-index: 100000; box-sizing: border-box;
+  color: #edf4fb; background: #263f5c; border: 1px solid #6685a6;
+  border-radius: 14px; box-shadow: 0 12px 50px rgba(0, 0, 0, .42);
+  overflow-y: auto; overscroll-behavior: contain; padding: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  line-height: 1.65; font-size: 13px;
+}
+.rr-popover-head { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  color: #9edeea; font-size: 11px; letter-spacing: .05em; margin-bottom: 12px; }
+.rr-popover button { background: #35536f; color: #edf4fb; border: 1px solid #718da6; box-shadow: none;
+  font-size: 12px; height: auto; padding: 4px 9px; cursor: pointer; }
+.rr-popover button:hover { background: #446780; }
+.rr-popover h3.rr-translated-title { color: #f2f7fd; margin: 0 0 8px; font-size: 17px; font-weight: 600; line-height: 1.55; }
+.rr-original-title { color: #bccde0; font-size: 12px; margin: 8px 0; overflow-wrap: anywhere; }
+.rr-original-abstract { color: #c4d4e5; font-size: 12px; white-space: pre-wrap; margin-top: 12px; }
+.rr-original-details { margin-top: 12px; color: #b9d6e7; font-size: 12px; }
+.rr-original-details summary { cursor: pointer; }
+.rr-abstract-label { color: #a6dce8; font-size: 11px; margin-top: 14px; margin-bottom: 5px; }
+.rr-translated-abstract { color: #edf4fb; white-space: pre-wrap; overflow-wrap: anywhere; }
+.rr-translation-state { color: #d4e8f5; margin-top: 12px; }
+.rr-cache-note, .rr-translation-note { color: #b3c8dd; font-size: 11px; margin-top: 12px; }
+.rr-translation-note { padding-top: 10px; border-top: 1px solid #506d88; }
+.rr-popover .rr-original-link { display: inline-block; color: #a5e5f0; margin-top: 10px; text-decoration: none; }
+.rr-error { color: #ffd098; }
+@media (max-width: 600px) {
+  .rr-item-top { gap: 5px; }
+  .research-radar .rr-title { font-size: 13px; }
+  .rr-popover { padding: 13px; }
+}
+
+/* Keep the two navigation levels visible while scrolling paper results. */
+.rr-navigation { position: sticky; top: 0; z-index: 5; padding: 6px 0 7px;
+  background: var(--background-primary, #2b405e); border-bottom: 1px solid rgba(153, 185, 219, .2); }
+.rr-item-summary { margin-top: 3px; }
+.rr-item-summary .rr-preview { margin-top: 0; }
+.research-radar .rr-handoff {
+  display: inline-flex; align-items: baseline; gap: 3px; vertical-align: baseline;
+  min-height: 0; height: auto; margin: 0 0 0 7px; padding: 0;
+  border: 0; border-radius: 0; background: transparent; box-shadow: none;
+  color: #83d9e9; font-size: 11px; font-weight: 600; line-height: inherit; white-space: nowrap;
+}
+.research-radar .rr-handoff:hover { color: #b5edf4; background: transparent; text-decoration: underline; }
+.rr-handoff-arrow { color: #d4b5f2; font-size: 12px; font-weight: 700; }
+.modal.rr-handoff-container { width:min(780px, calc(100vw - 32px)); }
+.rr-handoff-modal { width:100%; max-width:100%; min-width:0; }
+.rr-handoff-title { font-weight: 600; font-size: 16px; line-height: 1.5; }
+.rr-handoff-modal p, .rr-handoff-status { color: var(--text-muted); font-size: 12px; }
+.rr-handoff-intent { display: block; width: 100%; margin: 7px 0 12px; }
+.rr-handoff-prompt { width: 100%; height: 250px; resize: vertical; font-size: 12px; line-height: 1.6; }
+.rr-handoff-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.rr-selection-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 6px; }
+.research-radar .rr-selection-bar button {
+  flex: 0 0 auto; min-height: 25px; padding: 3px 8px;
+  border-radius: 6px; font-size: 11px; white-space: nowrap;
+}
+.rr-selection-count { color: var(--rr-accent); font-size: 12px; margin-right: 4px; }
+.research-radar .rr-batch-translate { color: #c7b9ff; border-color: rgba(182, 157, 246, .5); }
+.rr-batch-translation-status { flex: 1 1 150px; min-width: 130px; color: var(--text-muted); font-size: 11px; overflow-wrap: anywhere; }
+.rr-translation-badge { display: inline; color: var(--rr-accent); font-size: 10px; margin-left: 7px; white-space: nowrap; }
+.rr-translation-badge:empty { display: none; }
+.rr-preview { cursor: help; }
+.rr-preview:focus-visible { outline: 2px solid var(--rr-accent); outline-offset: 3px; }
+.research-radar [hidden] { display: none !important; }
+.research-radar .rr-batch-send { color: var(--rr-accent); border-color: rgba(124, 210, 230, .55); }
+.research-radar button:disabled { opacity: .45; cursor: default; }
+.research-radar .rr-select { flex: 0 0 auto; margin: 4px 0 0; width: 16px; height: 16px; cursor: pointer; }
+.rr-item.is-selected { background: rgba(93, 193, 215, .07); border-radius: 6px; }
+.rr-batch-preview { max-height: 230px; overflow-y: auto; padding-left: 25px; margin: 12px 0; }
+.rr-batch-preview li { padding: 6px 2px; }
+.rr-batch-title { font-size: 13px; line-height: 1.5; }
+.rr-batch-receipts { max-height: 220px; overflow-y: auto; }
+.rr-batch-receipt { margin-top: 8px; }
+.rr-batch-receipt button { display: block; height: auto; text-align: left; white-space: normal; font-size: 12px; }
+
+/* Standalone pane and settings */
+.rr-workspace { padding: clamp(12px, 2vw, 32px); overflow-y: auto; }
+.rr-workspace .research-radar { max-width: none; width:100%; }
+.rr-config-json { width:100%; min-height:300px; font-family:var(--font-monospace); font-size:12px; }
+.rr-config-status { white-space:pre-wrap; overflow-wrap:anywhere; color:var(--text-muted); }
+.research-radar button:focus-visible { outline:2px solid var(--interactive-accent); outline-offset:2px; }
+.theme-light .research-radar { --rr-accent:#087384; }
+.theme-light .research-radar .rr-keyword { color:#46616b; }
+.theme-light .research-radar .rr-keyword[aria-pressed="true"] { color:#075464; }
+.theme-light .research-radar .rr-item.is-zotero-pdf .rr-title,
+.theme-light .research-radar .rr-item.is-zotero-pdf .rr-item-number { color:#a52b3c; }
+.theme-light .research-radar .rr-item.is-zotero-no-pdf .rr-title,
+.theme-light .research-radar .rr-item.is-zotero-no-pdf .rr-item-number { color:#176c43; }
+.theme-light .research-radar .rr-handoff-arrow { color:#73519d; }
+.theme-light .research-radar .rr-batch-translate { color:#684590; }
+.research-radar button:disabled { cursor:default; opacity:.45; }
+.theme-light .research-radar .rr-handoff { color:#087384; }
+.theme-light .research-radar .rr-handoff:hover { color:#034b59; }
+/* Bundled help remains readable in both light and dark themes. */
+.rr-help-body { user-select:text; line-height:1.65; overflow-wrap:anywhere; }
+.rr-help-body table { width:100%; font-size:var(--font-small); }
+.rr-config-status { white-space:pre-wrap; overflow-wrap:anywhere; }
+.rr-config-status button { margin:4px 6px 0 0; }
+
+/* Hidden status indicators must override the inline-flex marker rule. */
+.rr-zotero-mark[hidden], .rr-zotero-refresh[hidden] { display: none !important; }
+.research-radar .rr-zotero-refresh { white-space: nowrap; font-size: 11px; padding: 3px 7px; }
+
+/* Handoff defaults live in settings; per-task fields stay compact and full-width. */
+.rr-handoff-modal details { margin:12px 0; }
+.rr-handoff-modal summary { cursor:pointer; color:var(--text-muted); font-size:var(--font-small); }
+.rr-handoff-target { color:var(--text-muted); font-size:var(--font-small); overflow-wrap:anywhere; }
+.rr-handoff-extra,.rr-handoff-prompt,.rr-handoff-template,.rr-handoff-field { width:100%; box-sizing:border-box; resize:vertical; margin:8px 0; }
+.rr-handoff-extra,.rr-handoff-field { min-height:88px; }
+.rr-handoff-prompt,.rr-handoff-template { min-height:220px; max-height:45vh; font-size:var(--font-small); line-height:1.5; }
+.rr-handoff-settings { margin-top:4px; font-size:var(--font-small); }
+.rr-handoff-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; margin:16px 0; }
+.rr-handoff-actions button { max-width:100%; white-space:normal; height:auto; min-height:var(--input-height); }

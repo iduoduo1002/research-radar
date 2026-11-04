@@ -1,0 +1,15 @@
+node_modules/
+dist/
+release/
+test-vault/
+evidence/
+backups/
+.DS_Store
+.env
+.env.*
+*.log
+*.pem
+*.key
+data.json
+.obsidian/
+.coverage/
