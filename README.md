@@ -4,7 +4,7 @@
 
 [English](README.en.md) · [更新记录](CHANGELOG.md) · [发布计划](docs/PUBLISHING.md) · [权利与署名](RIGHTS.md)
 
-项目按 **Apache License 2.0** 开源，版权署名为 iduoduo；可从 GitHub Releases 下载桌面测试版。最低版本按已实测的 Obsidian 1.13.7 标注；macOS 已实测，Windows/Linux 尚未实机验收。尚未提交 Obsidian 社区市场。
+项目按 **Apache License 2.0** 开源，版权署名为 iduoduo；现已在 [Obsidian 社区市场](https://community.obsidian.md/plugins/research-radar)公开，可点击页面上的 **Add to Obsidian** 安装，也可从 GitHub Releases 下载桌面测试版。最低版本按已实测的 Obsidian 1.13.7 标注；macOS 已实测，Windows/Linux 尚未实机验收。
 
 ![独立论文工作台](docs/images/radar-desktop.png)
 
@@ -23,7 +23,7 @@
 
 ## 快速开始
 
-1. 将 ZIP 内 `research-radar` 文件夹放到目标库 `.obsidian/plugins/`，启用插件。
+1. 在 Obsidian **设置 → 第三方插件 → 浏览**中搜索 **Research Radar**，安装并启用；也可点击[社区页面](https://community.obsidian.md/plugins/research-radar)的 **Add to Obsidian**。手动安装时，将 GitHub Releases 的 ZIP 内 `research-radar` 文件夹放到目标库 `.obsidian/plugins/`。
 2. 点击左侧雷达图标打开独立面板。
 3. 在设置页配置主题和来源，点击**保存设置**。初装只有一组示例，不包含作者的个人文库。
 4. 翻译默认关闭：在设置中选择本地 Ollama 或在线服务，启用并**保存设置** → **检查连接与模型** → **试译一句** → 勾选论文并翻译。在线服务需另开“允许在线发送”；API服务需个人密钥。
